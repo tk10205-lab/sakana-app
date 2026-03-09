@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>魚図鑑 AI</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: #0a1628;
+      color: #e0eaff;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    header {
+      width: 100%;
+      background: linear-gradient(135deg, #0d2137, #1a4a6b);
+      padding: 20px;
+      text-align: center;
+      box-shadow: 0 2px 20px rgba(0, 150, 255, 0.2);
+    }
+
+    header h1 {
+      font-size: 1.6rem;
+      font-weight: 700;
+      color: #7dd3fc;
+      letter-spacing: 0.05em;
+    }
+
+    header p {
+      font-size: 0.85rem;
+      color: #94a3b8;
+      margin-top: 4px;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 480px;
+      padding: 20px;
+      flex: 1;
+    }
+
+    /* API Key Section */
+    .api-key-section {
+      background: #132338;
+      border: 1px solid #1e3a52;
+      border-radius: 12px;
+      padding: 16px;
+      margin-bottom: 20px;
+    }
+
+    .api-key-section label {
+      font-size: 0.8rem;
+      color: #94a3b8;
+      display: block;
+      margin-bottom: 8px;
+    }
+
+    .api-key-row {
+      display: flex;
+      gap: 8px;
+    }
+
+    .api-key-row input {
+      flex: 1;
+      background: #0a1628;
+      border: 1px solid #2a4a6a;
+      border-radius: 8px;
+      padding: 10px 12px;
+      color: #e0eaff;
+      font-size: 0.85rem;
+      font-family: monospace;
+      outline: none;
+    }
+
+    .api-key-row input:focus {
+      border-color: #3b82f6;
+    }
+
+    .btn-save {
+      background: #1d4ed8;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      padding: 10px 16px;
+      font-size: 0.85rem;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: background 0.2s;
+    }
+
+    .btn-save:hover { background: #2563eb; }
+
+    .key-status {
+      font-size: 0.75rem;
+      margin-top: 6px;
+      color: #94a3b8;
+    }
+
+    .key-status.ok { color: #4ade80; }
+
+    /* Camera / Upload Area */
+    .capture-area {
+      background: #132338;
+      border: 2px dashed #2a4a6a;
+      border-radius: 16px;
+      padding: 30px 20px;
+      text-align: center;
+      cursor: pointer;
+      transition: border-color 0.2s, background 0.2s;
+      position: relative;
+      overflow: hidden;
+      margin-bottom: 16px;
+    }
+
+    .capture-area:hover, .capture-area.dragover {
+      border-color: #3b82f6;
+      background: #162a40;
+    }
+
+    .capture-area input[type="file"] {
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      cursor: pointer;
+      width: 100%;
+      height: 100%;
+    }
+
+    .camera-icon {
+      font-size: 3rem;
+      margin-bottom: 10px;
+    }
+
+    .capture-area h2 {
+      font-size: 1rem;
+      color: #7dd3fc;
+      margin-bottom: 6px;
+    }
+
+    .capture-area p {
+      font-size: 0.8rem;
+      color: #64748b;
+    }
+
+    /* Preview */
+    #preview-container {
+      display: none;
+      margin-bottom: 16px;
+      position: relative;
+    }
+
+    #preview-img {
+      width: 100%;
+      border-radius: 12px;
+      display: block;
+      max-height: 300px;
+      object-fit: cover;
+    }
+
+    .btn-clear {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      background: rgba(0,0,0,0.6);
+      color: white;
+      border: none;
+      border-radius: 50%;
+      width: 32px;
+      height: 32px;
+      font-size: 1rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* Identify Button */
+    .btn-identify {
+      width: 100%;
+      background: linear-gradient(135deg, #0ea5e9, #2563eb);
+      color: white;
+      border: none;
+      border-radius: 12px;
+      padding: 16px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: opacity 0.2s, transform 0.1s;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      margin-bottom: 20px;
+    }
+
+    .btn-identify:hover { opacity: 0.9; }
+    .btn-identify:active { transform: scale(0.98); }
+    .btn-identify:disabled { opacity: 0.5; cursor: not-allowed; }
+    .btn-identify.visible { display: flex; }
+
+    /* Loading */
+    .spinner {
+      width: 20px;
+      height: 20px;
+      border: 2px solid rgba(255,255,255,0.3);
+      border-top-color: white;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* Result */
+    #result {
+      background: #132338;
+      border: 1px solid #1e3a52;
+      border-radius: 16px;
+      padding: 20px;
+      display: none;
+    }
+
+    #result.visible { display: block; }
+
+    .result-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 16px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid #1e3a52;
+    }
+
+    .fish-emoji { font-size: 2rem; }
+
+    .result-header h3 {
+      font-size: 1.2rem;
+      color: #7dd3fc;
+    }
+
+    .result-body {
+      font-size: 0.9rem;
+      line-height: 1.8;
+      color: #cbd5e1;
+      white-space: pre-wrap;
+    }
+
+    /* Error */
+    .error-box {
+      background: #2d1515;
+      border: 1px solid #7f1d1d;
+      border-radius: 12px;
+      padding: 16px;
+      color: #fca5a5;
+      font-size: 0.85rem;
+      margin-top: 12px;
+      display: none;
+    }
+
+    .error-box.visible { display: block; }
+
+    footer {
+      padding: 16px;
+      text-align: center;
+      font-size: 0.75rem;
+      color: #374151;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>🐟 魚図鑑 AI</h1>
+  <p>写真から魚の名前をAIが教えます</p>
+</header>
+
+<div class="container">
+
+  <!-- API Key -->
+  <div class="api-key-section">
+    <label>Anthropic API キー</label>
+    <div class="api-key-row">
+      <input type="password" id="api-key-input" placeholder="sk-ant-..." autocomplete="off">
+      <button class="btn-save" onclick="saveApiKey()">保存</button>
+    </div>
+    <div class="key-status" id="key-status">APIキーを入力してください</div>
+  </div>
+
+  <!-- Camera / Upload -->
+  <div class="capture-area" id="capture-area">
+    <input type="file" id="file-input" accept="image/*" capture="environment" onchange="handleFile(event)">
+    <div class="camera-icon">📷</div>
+    <h2>魚の写真を撮影 / 選択</h2>
+    <p>タップしてカメラを起動するか<br>写真ライブラリから選んでください</p>
+  </div>
+
+  <!-- Preview -->
+  <div id="preview-container">
+    <img id="preview-img" src="" alt="プレビュー">
+    <button class="btn-clear" onclick="clearImage()" title="クリア">✕</button>
+  </div>
+
+  <!-- Identify Button -->
+  <button class="btn-identify" id="btn-identify" onclick="identifyFish()">
+    <span id="btn-text">🔍 この魚を調べる</span>
+    <div class="spinner" id="spinner" style="display:none"></div>
+  </button>
+
+  <!-- Result -->
+  <div id="result">
+    <div class="result-header">
+      <span class="fish-emoji">🐠</span>
+      <h3>識別結果</h3>
+    </div>
+    <div class="result-body" id="result-body"></div>
+  </div>
+
+  <!-- Error -->
+  <div class="error-box" id="error-box"></div>
+
+</div>
+
+<footer>Powered by Claude claude-opus-4-6 Vision API</footer>
+
+<script>
+  let currentImageBase64 = null;
+  let currentMediaType = 'image/jpeg';
+
+  // Load saved API key
+  window.addEventListener('load', () => {
+    const saved = sessionStorage.getItem('anthropic_api_key');
+    if (saved) {
+      document.getElementById('api-key-input').value = saved;
+      updateKeyStatus(true);
+    }
+  });
+
+  function saveApiKey() {
+    const key = document.getElementById('api-key-input').value.trim();
+    if (!key.startsWith('sk-ant-')) {
+      updateKeyStatus(false, '有効なAPIキーを入力してください（sk-ant- で始まる）');
+      return;
+    }
+    sessionStorage.setItem('anthropic_api_key', key);
+    updateKeyStatus(true);
+  }
+
+  function updateKeyStatus(ok, msg) {
+    const el = document.getElementById('key-status');
+    if (ok) {
+      el.textContent = '✓ APIキーが設定されています';
+      el.className = 'key-status ok';
+    } else {
+      el.textContent = msg || 'APIキーを入力してください';
+      el.className = 'key-status';
+    }
+  }
+
+  function handleFile(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    currentMediaType = file.type || 'image/jpeg';
+
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const dataUrl = e.target.result;
+      // Extract base64 data (remove "data:image/jpeg;base64," prefix)
+      currentImageBase64 = dataUrl.split(',')[1];
+
+      // Show preview
+      document.getElementById('preview-img').src = dataUrl;
+      document.getElementById('preview-container').style.display = 'block';
+      document.getElementById('capture-area').style.display = 'none';
+      document.getElementById('btn-identify').classList.add('visible');
+
+      // Clear previous results
+      hideResult();
+      hideError();
+    };
+    reader.readAsDataURL(file);
+  }
+
+  function clearImage() {
+    currentImageBase64 = null;
+    document.getElementById('file-input').value = '';
+    document.getElementById('preview-container').style.display = 'none';
+    document.getElementById('capture-area').style.display = 'block';
+    document.getElementById('btn-identify').classList.remove('visible');
+    hideResult();
+    hideError();
+  }
+
+  async function identifyFish() {
+    const apiKey = sessionStorage.getItem('anthropic_api_key') ||
+                   document.getElementById('api-key-input').value.trim();
+
+    if (!apiKey) {
+      showError('APIキーを入力して「保存」を押してください。');
+      return;
+    }
+
+    if (!currentImageBase64) {
+      showError('写真を選択してください。');
+      return;
+    }
+
+    setLoading(true);
+    hideResult();
+    hideError();
+
+    const prompt = `この画像に映っている魚を識別してください。
+
+以下の形式で答えてください：
+
+【魚の名前】
+（和名・学名）
+
+【特徴】
+（外見的な特徴、色、形など）
+
+【生息地・分布】
+（どこに生息しているか）
+
+【豆知識】
+（興味深い情報）
+
+画像に魚が映っていない場合はその旨を教えてください。`;
+
+    try {
+      const response = await fetch('https://api.anthropic.com/v1/messages', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'x-api-key': apiKey,
+          'anthropic-version': '2023-06-01',
+          'anthropic-dangerous-direct-browser-access': 'true'
+        },
+        body: JSON.stringify({
+          model: 'claude-opus-4-6',
+          max_tokens: 1024,
+          messages: [
+            {
+              role: 'user',
+              content: [
+                {
+                  type: 'image',
+                  source: {
+                    type: 'base64',
+                    media_type: currentMediaType,
+                    data: currentImageBase64
+                  }
+                },
+                {
+                  type: 'text',
+                  text: prompt
+                }
+              ]
+            }
+          ]
+        })
+      });
+
+      if (!response.ok) {
+        const err = await response.json().catch(() => ({}));
+        const msg = err?.error?.message || `HTTPエラー: ${response.status}`;
+        throw new Error(msg);
+      }
+
+      const data = await response.json();
+      const text = data.content?.[0]?.text || '結果を取得できませんでした。';
+      showResult(text);
+
+    } catch (err) {
+      showError('エラーが発生しました: ' + err.message);
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  function setLoading(on) {
+    const btn = document.getElementById('btn-identify');
+    const text = document.getElementById('btn-text');
+    const spinner = document.getElementById('spinner');
+    btn.disabled = on;
+    text.textContent = on ? '解析中...' : '🔍 この魚を調べる';
+    spinner.style.display = on ? 'block' : 'none';
+  }
+
+  function showResult(text) {
+    document.getElementById('result-body').textContent = text;
+    document.getElementById('result').classList.add('visible');
+    document.getElementById('result').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
+  function hideResult() {
+    document.getElementById('result').classList.remove('visible');
+  }
+
+  function showError(msg) {
+    const el = document.getElementById('error-box');
+    el.textContent = msg;
+    el.classList.add('visible');
+  }
+
+  function hideError() {
+    document.getElementById('error-box').classList.remove('visible');
+  }
+</script>
+
+</body>
+</html>
