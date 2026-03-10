@@ -25,251 +25,162 @@
       box-shadow: 0 2px 20px rgba(0, 150, 255, 0.2);
     }
 
-    header h1 {
-      font-size: 1.6rem;
-      font-weight: 700;
-      color: #7dd3fc;
-      letter-spacing: 0.05em;
-    }
+    header h1 { font-size: 1.6rem; font-weight: 700; color: #7dd3fc; letter-spacing: 0.05em; }
+    header p { font-size: 0.85rem; color: #94a3b8; margin-top: 4px; }
 
-    header p {
-      font-size: 0.85rem;
-      color: #94a3b8;
-      margin-top: 4px;
-    }
+    .container { width: 100%; max-width: 480px; padding: 20px; flex: 1; }
 
-    .container {
-      width: 100%;
-      max-width: 480px;
-      padding: 20px;
-      flex: 1;
-    }
-
-    /* API Key Section */
+    /* API Key */
     .api-key-section {
-      background: #132338;
-      border: 1px solid #1e3a52;
-      border-radius: 12px;
-      padding: 16px;
-      margin-bottom: 20px;
+      background: #132338; border: 1px solid #1e3a52;
+      border-radius: 12px; padding: 16px; margin-bottom: 20px;
     }
-
-    .api-key-section label {
-      font-size: 0.8rem;
-      color: #94a3b8;
-      display: block;
-      margin-bottom: 8px;
-    }
-
-    .api-key-row {
-      display: flex;
-      gap: 8px;
-    }
-
+    .api-key-section label { font-size: 0.8rem; color: #94a3b8; display: block; margin-bottom: 8px; }
+    .api-key-row { display: flex; gap: 8px; }
     .api-key-row input {
-      flex: 1;
-      background: #0a1628;
-      border: 1px solid #2a4a6a;
-      border-radius: 8px;
-      padding: 10px 12px;
-      color: #e0eaff;
-      font-size: 0.85rem;
-      font-family: monospace;
-      outline: none;
+      flex: 1; background: #0a1628; border: 1px solid #2a4a6a;
+      border-radius: 8px; padding: 10px 12px; color: #e0eaff;
+      font-size: 0.85rem; font-family: monospace; outline: none;
     }
-
-    .api-key-row input:focus {
-      border-color: #3b82f6;
-    }
-
+    .api-key-row input:focus { border-color: #3b82f6; }
     .btn-save {
-      background: #1d4ed8;
-      color: white;
-      border: none;
-      border-radius: 8px;
-      padding: 10px 16px;
-      font-size: 0.85rem;
-      cursor: pointer;
-      white-space: nowrap;
-      transition: background 0.2s;
+      background: #1d4ed8; color: white; border: none; border-radius: 8px;
+      padding: 10px 16px; font-size: 0.85rem; cursor: pointer; white-space: nowrap;
     }
-
     .btn-save:hover { background: #2563eb; }
-
-    .key-status {
-      font-size: 0.75rem;
-      margin-top: 6px;
-      color: #94a3b8;
-    }
-
+    .key-status { font-size: 0.75rem; margin-top: 6px; color: #94a3b8; }
     .key-status.ok { color: #4ade80; }
 
-    /* Camera / Upload Area */
-    .capture-area {
-      background: #132338;
-      border: 2px dashed #2a4a6a;
+    /* Mode Toggle */
+    .mode-toggle {
+      display: flex; gap: 8px; margin-bottom: 16px;
+      background: #0d1f33; border-radius: 12px; padding: 4px;
+    }
+    .mode-btn {
+      flex: 1; padding: 10px; border: none; border-radius: 9px;
+      font-size: 0.85rem; font-weight: 600; cursor: pointer;
+      background: transparent; color: #64748b; transition: all 0.2s;
+    }
+    .mode-btn.active { background: #1d4ed8; color: white; }
+
+    /* Video */
+    .video-wrapper {
+      position: relative; border-radius: 16px; overflow: hidden;
+      background: #0d1f33; margin-bottom: 12px;
+      aspect-ratio: 4/3;
+    }
+    #camera-video {
+      width: 100%; height: 100%; object-fit: cover; display: block;
+    }
+    .video-placeholder {
+      position: absolute; inset: 0; display: flex; flex-direction: column;
+      align-items: center; justify-content: center; gap: 10px; color: #475569;
+    }
+    .video-placeholder span { font-size: 3rem; }
+    .video-placeholder p { font-size: 0.85rem; }
+    .frame-flash {
+      position: absolute; inset: 0; background: white;
+      opacity: 0; pointer-events: none; transition: opacity 0.05s;
       border-radius: 16px;
-      padding: 30px 20px;
-      text-align: center;
-      cursor: pointer;
-      transition: border-color 0.2s, background 0.2s;
-      position: relative;
-      overflow: hidden;
-      margin-bottom: 16px;
+    }
+    .frame-counter {
+      position: absolute; top: 10px; right: 10px;
+      background: rgba(0,0,0,0.6); color: #4ade80;
+      padding: 4px 10px; border-radius: 20px; font-size: 0.8rem; font-weight: 700;
+      display: none;
     }
 
-    .capture-area:hover, .capture-area.dragover {
-      border-color: #3b82f6;
-      background: #162a40;
+    .btn-capture {
+      width: 100%; background: linear-gradient(135deg, #059669, #0ea5e9);
+      color: white; border: none; border-radius: 12px; padding: 16px;
+      font-size: 1rem; font-weight: 600; cursor: pointer;
+      transition: opacity 0.2s, transform 0.1s; margin-bottom: 8px;
+      display: flex; align-items: center; justify-content: center; gap: 8px;
+    }
+    .btn-capture:hover { opacity: 0.9; }
+    .btn-capture:active { transform: scale(0.98); }
+    .btn-capture:disabled { opacity: 0.5; cursor: not-allowed; }
+
+    .capture-hint { font-size: 0.75rem; color: #475569; text-align: center; margin-bottom: 16px; }
+
+    /* Frames preview strip */
+    #frames-strip { display: none; gap: 6px; margin-bottom: 16px; }
+    #frames-strip.visible { display: flex; }
+    .frame-thumb {
+      flex: 1; border-radius: 8px; overflow: hidden;
+      border: 2px solid #1e3a52; position: relative;
+    }
+    .frame-thumb img { width: 100%; height: 70px; object-fit: cover; display: block; }
+    .frame-thumb span {
+      position: absolute; bottom: 2px; left: 50%; transform: translateX(-50%);
+      background: rgba(0,0,0,0.6); color: #94a3b8;
+      font-size: 0.65rem; padding: 1px 6px; border-radius: 10px;
     }
 
+    /* Photo mode */
+    .capture-area {
+      background: #132338; border: 2px dashed #2a4a6a; border-radius: 16px;
+      padding: 30px 20px; text-align: center; cursor: pointer;
+      transition: border-color 0.2s; position: relative; overflow: hidden; margin-bottom: 16px;
+    }
+    .capture-area:hover { border-color: #3b82f6; }
     .capture-area input[type="file"] {
-      position: absolute;
-      inset: 0;
-      opacity: 0;
-      cursor: pointer;
-      width: 100%;
-      height: 100%;
+      position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%;
     }
+    .capture-area h2 { font-size: 1rem; color: #7dd3fc; margin-bottom: 6px; }
+    .capture-area p { font-size: 0.8rem; color: #64748b; }
 
-    .camera-icon {
-      font-size: 3rem;
-      margin-bottom: 10px;
-    }
-
-    .capture-area h2 {
-      font-size: 1rem;
-      color: #7dd3fc;
-      margin-bottom: 6px;
-    }
-
-    .capture-area p {
-      font-size: 0.8rem;
-      color: #64748b;
-    }
-
-    /* Preview */
-    #preview-container {
-      display: none;
-      margin-bottom: 16px;
-      position: relative;
-    }
-
-    #preview-img {
-      width: 100%;
-      border-radius: 12px;
-      display: block;
-      max-height: 300px;
-      object-fit: cover;
-    }
-
+    #photo-preview-container { display: none; margin-bottom: 16px; position: relative; }
+    #preview-img { width: 100%; border-radius: 12px; display: block; max-height: 300px; object-fit: cover; }
     .btn-clear {
-      position: absolute;
-      top: 8px;
-      right: 8px;
-      background: rgba(0,0,0,0.6);
-      color: white;
-      border: none;
-      border-radius: 50%;
-      width: 32px;
-      height: 32px;
-      font-size: 1rem;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      position: absolute; top: 8px; right: 8px; background: rgba(0,0,0,0.6);
+      color: white; border: none; border-radius: 50%; width: 32px; height: 32px;
+      font-size: 1rem; cursor: pointer; display: flex; align-items: center; justify-content: center;
     }
 
-    /* Identify Button */
+    /* Identify Button (photo mode) */
     .btn-identify {
-      width: 100%;
-      background: linear-gradient(135deg, #0ea5e9, #2563eb);
-      color: white;
-      border: none;
-      border-radius: 12px;
-      padding: 16px;
-      font-size: 1rem;
-      font-weight: 600;
-      cursor: pointer;
-      transition: opacity 0.2s, transform 0.1s;
-      display: none;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      margin-bottom: 20px;
+      width: 100%; background: linear-gradient(135deg, #0ea5e9, #2563eb);
+      color: white; border: none; border-radius: 12px; padding: 16px;
+      font-size: 1rem; font-weight: 600; cursor: pointer;
+      transition: opacity 0.2s, transform 0.1s; display: none;
+      align-items: center; justify-content: center; gap: 8px; margin-bottom: 20px;
     }
-
-    .btn-identify:hover { opacity: 0.9; }
     .btn-identify:active { transform: scale(0.98); }
     .btn-identify:disabled { opacity: 0.5; cursor: not-allowed; }
     .btn-identify.visible { display: flex; }
 
-    /* Loading */
+    /* Spinner */
     .spinner {
-      width: 20px;
-      height: 20px;
-      border: 2px solid rgba(255,255,255,0.3);
-      border-top-color: white;
-      border-radius: 50%;
-      animation: spin 0.8s linear infinite;
+      width: 20px; height: 20px; border: 2px solid rgba(255,255,255,0.3);
+      border-top-color: white; border-radius: 50%; animation: spin 0.8s linear infinite;
     }
-
     @keyframes spin { to { transform: rotate(360deg); } }
 
     /* Result */
     #result {
-      background: #132338;
-      border: 1px solid #1e3a52;
-      border-radius: 16px;
-      padding: 20px;
-      display: none;
+      background: #132338; border: 1px solid #1e3a52;
+      border-radius: 16px; padding: 20px; display: none; margin-bottom: 16px;
     }
-
     #result.visible { display: block; }
-
     .result-header {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      margin-bottom: 16px;
-      padding-bottom: 12px;
-      border-bottom: 1px solid #1e3a52;
+      display: flex; align-items: center; gap: 10px;
+      margin-bottom: 16px; padding-bottom: 12px; border-bottom: 1px solid #1e3a52;
     }
-
-    .fish-emoji { font-size: 2rem; }
-
-    .result-header h3 {
-      font-size: 1.2rem;
-      color: #7dd3fc;
-    }
-
-    .result-body {
-      font-size: 0.9rem;
-      line-height: 1.8;
-      color: #cbd5e1;
-      white-space: pre-wrap;
+    .result-header h3 { font-size: 1.2rem; color: #7dd3fc; }
+    .result-body { font-size: 0.9rem; line-height: 1.8; color: #cbd5e1; white-space: pre-wrap; }
+    .result-frames-count {
+      font-size: 0.75rem; color: #4ade80; margin-bottom: 8px;
     }
 
     /* Error */
     .error-box {
-      background: #2d1515;
-      border: 1px solid #7f1d1d;
-      border-radius: 12px;
-      padding: 16px;
-      color: #fca5a5;
-      font-size: 0.85rem;
-      margin-top: 12px;
-      display: none;
+      background: #2d1515; border: 1px solid #7f1d1d; border-radius: 12px;
+      padding: 16px; color: #fca5a5; font-size: 0.85rem; margin-top: 12px; display: none;
     }
-
     .error-box.visible { display: block; }
 
-    footer {
-      padding: 16px;
-      text-align: center;
-      font-size: 0.75rem;
-      color: #374151;
-    }
+    footer { padding: 16px; text-align: center; font-size: 0.75rem; color: #374151; }
   </style>
 </head>
 <body>
@@ -291,32 +202,65 @@
     <div class="key-status" id="key-status">APIキーを入力してください</div>
   </div>
 
-  <!-- Camera / Upload -->
-  <div class="capture-area" id="capture-area">
-    <input type="file" id="file-input" accept="image/*" capture="environment" onchange="handleFile(event)">
-    <div class="camera-icon">📷</div>
-    <h2>魚の写真を撮影 / 選択</h2>
-    <p>タップしてカメラを起動するか<br>写真ライブラリから選んでください</p>
+  <!-- Mode Toggle -->
+  <div class="mode-toggle">
+    <button id="btn-mode-video" class="mode-btn active" onclick="switchMode('video')">📹 ライブカメラ</button>
+    <button id="btn-mode-photo" class="mode-btn" onclick="switchMode('photo')">🖼️ 写真を選択</button>
   </div>
 
-  <!-- Preview -->
-  <div id="preview-container">
-    <img id="preview-img" src="" alt="プレビュー">
-    <button class="btn-clear" onclick="clearImage()" title="クリア">✕</button>
+  <!-- ===== VIDEO MODE ===== -->
+  <div id="video-mode">
+    <div class="video-wrapper">
+      <video id="camera-video" autoplay playsinline muted></video>
+      <div class="video-placeholder" id="video-placeholder">
+        <span>📷</span>
+        <p>下のボタンを押してカメラを起動</p>
+      </div>
+      <div class="frame-flash" id="frame-flash"></div>
+      <div class="frame-counter" id="frame-counter"></div>
+    </div>
+
+    <button class="btn-capture" id="btn-capture" onclick="startVideoCapture()">
+      <span id="capture-btn-text">📹 カメラ起動 → 自動撮影して識別</span>
+      <div class="spinner" id="capture-spinner" style="display:none"></div>
+    </button>
+    <p class="capture-hint">3フレームを自動撮影してAIが総合判断します（精度向上）</p>
+
+    <!-- Frame thumbnails -->
+    <div id="frames-strip">
+      <div class="frame-thumb"><img id="thumb0" src=""><span>フレーム1</span></div>
+      <div class="frame-thumb"><img id="thumb1" src=""><span>フレーム2</span></div>
+      <div class="frame-thumb"><img id="thumb2" src=""><span>フレーム3</span></div>
+    </div>
   </div>
 
-  <!-- Identify Button -->
-  <button class="btn-identify" id="btn-identify" onclick="identifyFish()">
-    <span id="btn-text">🔍 この魚を調べる</span>
-    <div class="spinner" id="spinner" style="display:none"></div>
-  </button>
+  <!-- ===== PHOTO MODE ===== -->
+  <div id="photo-mode" style="display:none">
+    <div class="capture-area" id="capture-area">
+      <input type="file" id="file-input" accept="image/*" capture="environment" onchange="handleFile(event)">
+      <div style="font-size:3rem;margin-bottom:10px">📷</div>
+      <h2>魚の写真を撮影 / 選択</h2>
+      <p>タップしてカメラを起動するか<br>写真ライブラリから選んでください</p>
+    </div>
+
+    <div id="photo-preview-container">
+      <img id="preview-img" src="" alt="プレビュー">
+      <button class="btn-clear" onclick="clearImage()">✕</button>
+    </div>
+
+    <button class="btn-identify" id="btn-identify" onclick="identifyFromPhoto()">
+      <span id="btn-text">🔍 この魚を調べる</span>
+      <div class="spinner" id="photo-spinner" style="display:none"></div>
+    </button>
+  </div>
 
   <!-- Result -->
   <div id="result">
     <div class="result-header">
-      <span class="fish-emoji">🐠</span>
+      <span style="font-size:2rem">🐠</span>
       <h3>識別結果</h3>
     </div>
+    <div class="result-frames-count" id="result-frames-count"></div>
     <div class="result-body" id="result-body"></div>
   </div>
 
@@ -328,10 +272,13 @@
 <footer>Powered by Claude claude-opus-4-6 Vision API</footer>
 
 <script>
-  let currentImageBase64 = null;
-  let currentMediaType = 'image/jpeg';
+  let currentMode = 'video';
+  let videoStream = null;
+  let capturedFrames = [];
+  let photoBase64 = null;
+  let photoMediaType = 'image/jpeg';
 
-  // Load saved API key
+  // ── API Key ──────────────────────────────────────────
   window.addEventListener('load', () => {
     const saved = localStorage.getItem('anthropic_api_key');
     if (saved) {
@@ -352,74 +299,125 @@
 
   function updateKeyStatus(ok, msg) {
     const el = document.getElementById('key-status');
-    if (ok) {
-      el.textContent = '✓ APIキーが設定されています';
-      el.className = 'key-status ok';
-    } else {
-      el.textContent = msg || 'APIキーを入力してください';
-      el.className = 'key-status';
+    if (ok) { el.textContent = '✓ APIキーが設定されています'; el.className = 'key-status ok'; }
+    else { el.textContent = msg || 'APIキーを入力してください'; el.className = 'key-status'; }
+  }
+
+  function getApiKey() {
+    return localStorage.getItem('anthropic_api_key') ||
+           document.getElementById('api-key-input').value.trim();
+  }
+
+  // ── Mode Switch ───────────────────────────────────────
+  function switchMode(mode) {
+    currentMode = mode;
+    document.getElementById('btn-mode-video').classList.toggle('active', mode === 'video');
+    document.getElementById('btn-mode-photo').classList.toggle('active', mode === 'photo');
+    document.getElementById('video-mode').style.display = mode === 'video' ? 'block' : 'none';
+    document.getElementById('photo-mode').style.display  = mode === 'photo' ? 'block' : 'none';
+    hideResult(); hideError();
+    if (mode === 'photo' && videoStream) stopCamera();
+  }
+
+  // ── Camera / Video ────────────────────────────────────
+  async function startCamera() {
+    try {
+      videoStream = await navigator.mediaDevices.getUserMedia({
+        video: { facingMode: 'environment', width: { ideal: 1280 }, height: { ideal: 960 } }
+      });
+      const video = document.getElementById('camera-video');
+      video.srcObject = videoStream;
+      document.getElementById('video-placeholder').style.display = 'none';
+    } catch (e) {
+      showError('カメラの起動に失敗しました: ' + e.message);
     }
   }
 
-  function handleFile(event) {
-    const file = event.target.files[0];
-    if (!file) return;
-
-    currentMediaType = file.type || 'image/jpeg';
-
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      const dataUrl = e.target.result;
-      // Extract base64 data (remove "data:image/jpeg;base64," prefix)
-      currentImageBase64 = dataUrl.split(',')[1];
-
-      // Show preview
-      document.getElementById('preview-img').src = dataUrl;
-      document.getElementById('preview-container').style.display = 'block';
-      document.getElementById('capture-area').style.display = 'none';
-      document.getElementById('btn-identify').classList.add('visible');
-
-      // Clear previous results
-      hideResult();
-      hideError();
-    };
-    reader.readAsDataURL(file);
+  function stopCamera() {
+    if (videoStream) { videoStream.getTracks().forEach(t => t.stop()); videoStream = null; }
+    const video = document.getElementById('camera-video');
+    video.srcObject = null;
+    document.getElementById('video-placeholder').style.display = 'flex';
   }
 
-  function clearImage() {
-    currentImageBase64 = null;
-    document.getElementById('file-input').value = '';
-    document.getElementById('preview-container').style.display = 'none';
-    document.getElementById('capture-area').style.display = 'block';
-    document.getElementById('btn-identify').classList.remove('visible');
-    hideResult();
-    hideError();
+  function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
+
+  async function flashEffect() {
+    const flash = document.getElementById('frame-flash');
+    flash.style.opacity = '0.8';
+    await sleep(80);
+    flash.style.opacity = '0';
   }
 
-  async function identifyFish() {
-    const apiKey = localStorage.getItem('anthropic_api_key') ||
-                   document.getElementById('api-key-input').value.trim();
+  async function captureFramesFromVideo(count = 3, intervalMs = 600) {
+    const video = document.getElementById('camera-video');
+    const canvas = document.createElement('canvas');
+    canvas.width = video.videoWidth || 640;
+    canvas.height = video.videoHeight || 480;
+    const ctx = canvas.getContext('2d');
+    const counter = document.getElementById('frame-counter');
+    const frames = [];
 
-    if (!apiKey) {
-      showError('APIキーを入力して「保存」を押してください。');
-      return;
+    counter.style.display = 'block';
+    for (let i = 0; i < count; i++) {
+      counter.textContent = `撮影中 ${i + 1}/${count}`;
+      ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+      const dataUrl = canvas.toDataURL('image/jpeg', 0.85);
+      frames.push(dataUrl);
+      flashEffect();
+      // Show thumbnail
+      document.getElementById('thumb' + i).src = dataUrl;
+      if (i < count - 1) await sleep(intervalMs);
+    }
+    counter.style.display = 'none';
+    return frames;
+  }
+
+  async function startVideoCapture() {
+    if (!getApiKey()) { showError('APIキーを入力して「保存」を押してください。'); return; }
+
+    // Start camera if not running
+    if (!videoStream) {
+      await startCamera();
+      await sleep(1000); // let camera warm up
     }
 
-    if (!currentImageBase64) {
-      showError('写真を選択してください。');
-      return;
+    const btn = document.getElementById('btn-capture');
+    const btnText = document.getElementById('capture-btn-text');
+    const spinner = document.getElementById('capture-spinner');
+    btn.disabled = true;
+    spinner.style.display = 'block';
+    btnText.textContent = '撮影・解析中...';
+
+    hideResult(); hideError();
+    document.getElementById('frames-strip').classList.remove('visible');
+
+    try {
+      const dataUrls = await captureFramesFromVideo(3, 600);
+      capturedFrames = dataUrls.map(d => d.split(',')[1]);
+      document.getElementById('frames-strip').classList.add('visible');
+      await identifyFromFrames(capturedFrames);
+    } catch (e) {
+      showError('エラー: ' + e.message);
+    } finally {
+      btn.disabled = false;
+      spinner.style.display = 'none';
+      btnText.textContent = '📹 もう一度撮影して識別';
     }
+  }
 
-    setLoading(true);
-    hideResult();
-    hideError();
-
-    const prompt = `この画像に映っている魚を識別してください。
+  async function identifyFromFrames(frames) {
+    const apiKey = getApiKey();
+    const prompt = `複数フレームの動画から魚を識別してください。
+各フレームを総合的に判断して最も正確な識別結果を出してください。
 
 以下の形式で答えてください：
 
 【魚の名前】
 （和名・学名）
+
+【確信度】
+（高/中/低）と理由
 
 【特徴】
 （外見的な特徴、色、形など）
@@ -432,85 +430,102 @@
 
 画像に魚が映っていない場合はその旨を教えてください。`;
 
+    const content = [];
+    frames.forEach((b64, i) => {
+      content.push({ type: 'image', source: { type: 'base64', media_type: 'image/jpeg', data: b64 } });
+    });
+    content.push({ type: 'text', text: prompt });
+
+    const response = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': apiKey,
+        'anthropic-version': '2023-06-01',
+        'anthropic-dangerous-direct-browser-access': 'true'
+      },
+      body: JSON.stringify({
+        model: 'claude-opus-4-6',
+        max_tokens: 1024,
+        messages: [{ role: 'user', content }]
+      })
+    });
+
+    if (!response.ok) {
+      const err = await response.json().catch(() => ({}));
+      throw new Error(err?.error?.message || `HTTPエラー: ${response.status}`);
+    }
+
+    const data = await response.json();
+    const text = data.content?.[0]?.text || '結果を取得できませんでした。';
+    document.getElementById('result-frames-count').textContent = `📹 ${frames.length}フレームを総合解析`;
+    showResult(text);
+  }
+
+  // ── Photo Mode ────────────────────────────────────────
+  function handleFile(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+    photoMediaType = file.type || 'image/jpeg';
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const dataUrl = e.target.result;
+      photoBase64 = dataUrl.split(',')[1];
+      document.getElementById('preview-img').src = dataUrl;
+      document.getElementById('photo-preview-container').style.display = 'block';
+      document.getElementById('capture-area').style.display = 'none';
+      document.getElementById('btn-identify').classList.add('visible');
+      hideResult(); hideError();
+    };
+    reader.readAsDataURL(file);
+  }
+
+  function clearImage() {
+    photoBase64 = null;
+    document.getElementById('file-input').value = '';
+    document.getElementById('photo-preview-container').style.display = 'none';
+    document.getElementById('capture-area').style.display = 'block';
+    document.getElementById('btn-identify').classList.remove('visible');
+    hideResult(); hideError();
+  }
+
+  async function identifyFromPhoto() {
+    if (!getApiKey()) { showError('APIキーを入力して「保存」を押してください。'); return; }
+    if (!photoBase64) { showError('写真を選択してください。'); return; }
+
+    const btn = document.getElementById('btn-identify');
+    const btnText = document.getElementById('btn-text');
+    const spinner = document.getElementById('photo-spinner');
+    btn.disabled = true; spinner.style.display = 'block';
+    btnText.textContent = '解析中...';
+    hideResult(); hideError();
+
     try {
-      const response = await fetch('https://api.anthropic.com/v1/messages', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'x-api-key': apiKey,
-          'anthropic-version': '2023-06-01',
-          'anthropic-dangerous-direct-browser-access': 'true'
-        },
-        body: JSON.stringify({
-          model: 'claude-opus-4-6',
-          max_tokens: 1024,
-          messages: [
-            {
-              role: 'user',
-              content: [
-                {
-                  type: 'image',
-                  source: {
-                    type: 'base64',
-                    media_type: currentMediaType,
-                    data: currentImageBase64
-                  }
-                },
-                {
-                  type: 'text',
-                  text: prompt
-                }
-              ]
-            }
-          ]
-        })
-      });
-
-      if (!response.ok) {
-        const err = await response.json().catch(() => ({}));
-        const msg = err?.error?.message || `HTTPエラー: ${response.status}`;
-        throw new Error(msg);
-      }
-
-      const data = await response.json();
-      const text = data.content?.[0]?.text || '結果を取得できませんでした。';
-      showResult(text);
-
-    } catch (err) {
-      showError('エラーが発生しました: ' + err.message);
+      await identifyFromFrames([photoBase64]);
+      document.getElementById('result-frames-count').textContent = '📷 写真1枚で解析';
+    } catch (e) {
+      showError('エラーが発生しました: ' + e.message);
     } finally {
-      setLoading(false);
+      btn.disabled = false; spinner.style.display = 'none';
+      btnText.textContent = '🔍 この魚を調べる';
     }
   }
 
-  function setLoading(on) {
-    const btn = document.getElementById('btn-identify');
-    const text = document.getElementById('btn-text');
-    const spinner = document.getElementById('spinner');
-    btn.disabled = on;
-    text.textContent = on ? '解析中...' : '🔍 この魚を調べる';
-    spinner.style.display = on ? 'block' : 'none';
-  }
-
+  // ── UI helpers ────────────────────────────────────────
   function showResult(text) {
     document.getElementById('result-body').textContent = text;
     document.getElementById('result').classList.add('visible');
     document.getElementById('result').scrollIntoView({ behavior: 'smooth', block: 'start' });
   }
 
-  function hideResult() {
-    document.getElementById('result').classList.remove('visible');
-  }
+  function hideResult() { document.getElementById('result').classList.remove('visible'); }
 
   function showError(msg) {
     const el = document.getElementById('error-box');
-    el.textContent = msg;
-    el.classList.add('visible');
+    el.textContent = msg; el.classList.add('visible');
   }
 
-  function hideError() {
-    document.getElementById('error-box').classList.remove('visible');
-  }
+  function hideError() { document.getElementById('error-box').classList.remove('visible'); }
 </script>
 
 </body>
