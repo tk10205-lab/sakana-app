@@ -6,117 +6,145 @@
   <title>魚図鑑 AI</title>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
+
     body {
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-      background: #0a1628; color: #e0eaff;
-      min-height: 100vh; display: flex; flex-direction: column; align-items: center;
+      background: #0a1628;
+      color: #e0eaff;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
     }
+
     header {
-      width: 100%; background: linear-gradient(135deg, #0d2137, #1a4a6b);
-      padding: 14px 20px; text-align: center;
+      width: 100%;
+      background: linear-gradient(135deg, #0d2137, #1a4a6b);
+      padding: 16px 20px;
+      text-align: center;
       box-shadow: 0 2px 20px rgba(0,150,255,0.2);
     }
     header h1 { font-size: 1.4rem; font-weight: 700; color: #7dd3fc; }
-    header p  { font-size: 0.78rem; color: #94a3b8; margin-top: 2px; }
-    .container { width: 100%; max-width: 480px; padding: 14px; flex: 1; }
+    header p  { font-size: 0.8rem; color: #94a3b8; margin-top: 3px; }
+
+    .container { width: 100%; max-width: 480px; padding: 16px; flex: 1; }
 
     /* API Key */
     .api-key-section {
       background: #132338; border: 1px solid #1e3a52;
-      border-radius: 12px; padding: 12px; margin-bottom: 14px;
+      border-radius: 12px; padding: 14px; margin-bottom: 16px;
     }
-    .api-key-section label { font-size: 0.76rem; color: #94a3b8; display: block; margin-bottom: 6px; }
+    .api-key-section label { font-size: 0.78rem; color: #94a3b8; display: block; margin-bottom: 7px; }
     .api-key-row { display: flex; gap: 8px; }
     .api-key-row input {
       flex: 1; background: #0a1628; border: 1px solid #2a4a6a;
-      border-radius: 8px; padding: 8px 10px; color: #e0eaff;
-      font-size: 0.82rem; font-family: monospace; outline: none;
+      border-radius: 8px; padding: 9px 12px; color: #e0eaff;
+      font-size: 0.85rem; font-family: monospace; outline: none;
     }
     .api-key-row input:focus { border-color: #3b82f6; }
     .btn-save {
       background: #1d4ed8; color: white; border: none; border-radius: 8px;
-      padding: 8px 13px; font-size: 0.82rem; cursor: pointer;
+      padding: 9px 14px; font-size: 0.85rem; cursor: pointer;
     }
-    .key-status { font-size: 0.72rem; margin-top: 4px; color: #94a3b8; }
+    .key-status { font-size: 0.73rem; margin-top: 5px; color: #94a3b8; }
     .key-status.ok { color: #4ade80; }
 
-    /* Tabs */
-    .tabs {
-      display: flex; gap: 4px; margin-bottom: 14px;
+    /* Mode Toggle */
+    .mode-toggle {
+      display: flex; gap: 6px; margin-bottom: 14px;
       background: #0d1f33; border-radius: 12px; padding: 4px;
     }
-    .tab-btn {
-      flex: 1; padding: 9px 4px; border: none; border-radius: 9px;
-      font-size: 0.78rem; font-weight: 600; cursor: pointer;
+    .mode-btn {
+      flex: 1; padding: 9px; border: none; border-radius: 9px;
+      font-size: 0.82rem; font-weight: 600; cursor: pointer;
       background: transparent; color: #64748b; transition: all 0.2s;
     }
-    .tab-btn.active { background: #1d4ed8; color: white; }
+    .mode-btn.active { background: #1d4ed8; color: white; }
 
-    /* ═══ VIDEO TAB ═══ */
+    /* ═══ VIDEO MODE ═══ */
     .video-wrapper {
       position: relative; border-radius: 16px; overflow: hidden;
-      background: #0d1f33; margin-bottom: 10px; aspect-ratio: 4/3;
+      background: #0d1f33; margin-bottom: 12px;
+      aspect-ratio: 4/3;
     }
     #camera-video { width: 100%; height: 100%; object-fit: cover; display: block; }
+
     .video-placeholder {
       position: absolute; inset: 0; display: flex; flex-direction: column;
-      align-items: center; justify-content: center; gap: 8px; color: #475569;
+      align-items: center; justify-content: center; gap: 10px; color: #475569;
     }
-    .video-placeholder span { font-size: 2.5rem; }
-    .video-placeholder p { font-size: 0.8rem; }
+    .video-placeholder span { font-size: 3rem; }
+    .video-placeholder p { font-size: 0.82rem; }
 
     /* Countdown ring */
-    .countdown-ring { position: absolute; top: 10px; left: 10px; width: 52px; height: 52px; display: none; }
+    .countdown-ring {
+      position: absolute; top: 10px; left: 10px;
+      width: 52px; height: 52px; display: none;
+    }
     .countdown-ring svg { transform: rotate(-90deg); }
-    .countdown-ring circle { fill: none; stroke: rgba(255,255,255,0.12); stroke-width: 4; }
-    .countdown-ring .progress { stroke: #0ea5e9; stroke-width: 4; stroke-dasharray: 132; transition: stroke-dashoffset 1s linear; }
+    .countdown-ring circle {
+      fill: none; stroke: rgba(255,255,255,0.15); stroke-width: 4;
+    }
+    .countdown-ring .progress {
+      stroke: #0ea5e9; stroke-width: 4;
+      stroke-dasharray: 132; stroke-dashcap: round;
+      transition: stroke-dashoffset 1s linear;
+    }
     .countdown-text {
       position: absolute; inset: 0; display: flex;
       align-items: center; justify-content: center;
       font-size: 1.2rem; font-weight: 700; color: white;
     }
 
-    /* Live name overlay */
+    /* Live fish name overlay */
     .fish-overlay {
       position: absolute; bottom: 0; left: 0; right: 0;
-      background: linear-gradient(transparent, rgba(0,0,0,0.78));
-      padding: 18px 14px 10px; display: none;
+      background: linear-gradient(transparent, rgba(0,0,0,0.75));
+      padding: 20px 14px 12px;
+      display: none;
     }
     .fish-overlay-name {
-      font-size: 1.35rem; font-weight: 700; color: #7dd3fc;
-      text-shadow: 0 1px 6px rgba(0,0,0,0.9); transition: opacity 0.25s;
+      font-size: 1.4rem; font-weight: 700; color: #7dd3fc;
+      text-shadow: 0 1px 6px rgba(0,0,0,0.8);
+      transition: opacity 0.3s;
     }
-    .fish-overlay-sub { font-size: 0.72rem; color: rgba(255,255,255,0.55); margin-top: 2px; }
+    .fish-overlay-sub {
+      font-size: 0.75rem; color: rgba(255,255,255,0.6); margin-top: 2px;
+    }
 
+    /* Scanning pulse ring around video */
     .video-wrapper.scanning::after {
       content: ''; position: absolute; inset: 0; border-radius: 16px;
-      border: 2px solid #0ea5e9; animation: scanPulse 1.5s ease-in-out infinite; pointer-events: none;
+      border: 2px solid #0ea5e9;
+      animation: scanPulse 1.5s ease-in-out infinite;
+      pointer-events: none;
     }
-    @keyframes scanPulse { 0%,100%{opacity:.3;} 50%{opacity:1;} }
+    @keyframes scanPulse {
+      0%, 100% { opacity: 0.3; }
+      50% { opacity: 1; }
+    }
 
-    /* Live tags */
-    .live-list { position: absolute; top: 10px; right: 10px; display: flex; flex-direction: column; gap: 4px; max-width: 140px; }
+    /* Detected list (during recording) */
+    .live-list {
+      position: absolute; top: 10px; right: 10px;
+      display: flex; flex-direction: column; gap: 4px; max-width: 140px;
+    }
     .live-tag {
-      background: rgba(14,165,233,0.88); color: white;
-      font-size: 0.7rem; font-weight: 600; padding: 3px 8px;
-      border-radius: 20px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+      background: rgba(14,165,233,0.85); color: white;
+      font-size: 0.72rem; font-weight: 600; padding: 3px 8px;
+      border-radius: 20px; white-space: nowrap; overflow: hidden;
+      text-overflow: ellipsis;
       animation: tagPop 0.3s ease;
     }
-    @keyframes tagPop { from{opacity:0;transform:scale(.7);} to{opacity:1;transform:scale(1);} }
-
-    /* Ref badge on video */
-    .ref-badge {
-      position: absolute; bottom: 60px; right: 10px;
-      background: rgba(16,185,129,0.9); color: white;
-      font-size: 0.68rem; font-weight: 700; padding: 3px 8px;
-      border-radius: 20px; display: none;
+    @keyframes tagPop {
+      from { opacity: 0; transform: scale(0.7); }
+      to   { opacity: 1; transform: scale(1); }
     }
-    .ref-badge.visible { display: block; }
 
     /* Buttons */
     .btn-rec {
-      width: 100%; border: none; border-radius: 12px; padding: 14px;
-      font-size: 0.95rem; font-weight: 700; cursor: pointer;
+      width: 100%; border: none; border-radius: 12px; padding: 15px;
+      font-size: 1rem; font-weight: 700; cursor: pointer;
       display: flex; align-items: center; justify-content: center; gap: 8px;
       margin-bottom: 6px; transition: opacity 0.2s, transform 0.1s;
     }
@@ -124,165 +152,96 @@
     .btn-rec:disabled { opacity: 0.45; cursor: not-allowed; }
     .btn-rec.start { background: linear-gradient(135deg, #dc2626, #b91c1c); color: white; }
     .btn-rec.stop  { background: linear-gradient(135deg, #6b7280, #4b5563); color: white; }
-    .rec-dot { width: 11px; height: 11px; background: white; border-radius: 50%; animation: blink .8s step-end infinite; }
-    @keyframes blink { 0%,100%{opacity:1;} 50%{opacity:.2;} }
 
-    .hint { font-size: 0.71rem; color: #475569; text-align: center; margin-bottom: 12px; }
+    .rec-dot {
+      width: 12px; height: 12px; background: white; border-radius: 50%;
+      animation: blink 0.8s step-end infinite;
+    }
+    @keyframes blink { 0%,100%{opacity:1;} 50%{opacity:0.2;} }
+
+    .hint { font-size: 0.73rem; color: #475569; text-align: center; margin-bottom: 14px; }
 
     /* Summary */
     #summary {
       background: #132338; border: 1px solid #1e3a52;
-      border-radius: 16px; padding: 16px; display: none; margin-bottom: 14px;
+      border-radius: 16px; padding: 18px; display: none; margin-bottom: 16px;
     }
     #summary.visible { display: block; }
-    .summary-title { font-size: 0.82rem; color: #94a3b8; margin-bottom: 10px; padding-bottom: 8px; border-bottom: 1px solid #1e3a52; }
-    .summary-title strong { color: #7dd3fc; font-size: 0.95rem; }
-    .fish-list { list-style: none; display: flex; flex-direction: column; gap: 7px; }
+    .summary-title {
+      font-size: 0.85rem; color: #94a3b8; margin-bottom: 12px;
+      border-bottom: 1px solid #1e3a52; padding-bottom: 10px;
+    }
+    .summary-title strong { color: #7dd3fc; font-size: 1rem; }
+    .fish-list { list-style: none; display: flex; flex-direction: column; gap: 8px; }
     .fish-list li {
       display: flex; align-items: center; gap: 10px;
-      background: #0d1f33; border-radius: 10px; padding: 9px 12px;
+      background: #0d1f33; border-radius: 10px; padding: 10px 14px;
     }
     .fish-list li .num {
       background: #1d4ed8; color: white; border-radius: 50%;
-      width: 22px; height: 22px; font-size: 0.73rem; font-weight: 700;
+      width: 22px; height: 22px; font-size: 0.75rem; font-weight: 700;
       display: flex; align-items: center; justify-content: center; flex-shrink: 0;
     }
-    .fish-list li .name { font-size: 0.92rem; color: #e0eaff; font-weight: 600; }
-    .fish-list li .cnt  { margin-left: auto; font-size: 0.72rem; color: #64748b; }
-    .no-fish { color: #64748b; font-size: 0.83rem; text-align: center; padding: 10px; }
+    .fish-list li .name { font-size: 0.95rem; color: #e0eaff; font-weight: 600; }
+    .fish-list li .count { margin-left: auto; font-size: 0.75rem; color: #64748b; }
+    .no-fish { color: #64748b; font-size: 0.85rem; text-align: center; padding: 12px; }
 
-    /* ═══ PHOTO TAB ═══ */
+    /* Photo mode */
     .capture-area {
       background: #132338; border: 2px dashed #2a4a6a; border-radius: 16px;
-      padding: 28px 20px; text-align: center; cursor: pointer;
-      position: relative; overflow: hidden; margin-bottom: 12px;
+      padding: 30px 20px; text-align: center; cursor: pointer;
+      transition: border-color 0.2s; position: relative; overflow: hidden; margin-bottom: 14px;
     }
+    .capture-area:hover { border-color: #3b82f6; }
     .capture-area input[type="file"] {
       position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%;
     }
-    .capture-area h2 { font-size: 0.95rem; color: #7dd3fc; margin-bottom: 5px; }
-    .capture-area p { font-size: 0.78rem; color: #64748b; }
-    #photo-preview-container { display: none; margin-bottom: 12px; position: relative; }
-    #preview-img { width: 100%; border-radius: 12px; display: block; max-height: 260px; object-fit: cover; }
+    .capture-area h2 { font-size: 1rem; color: #7dd3fc; margin-bottom: 6px; }
+    .capture-area p { font-size: 0.8rem; color: #64748b; }
+
+    #photo-preview-container { display: none; margin-bottom: 14px; position: relative; }
+    #preview-img { width: 100%; border-radius: 12px; display: block; max-height: 280px; object-fit: cover; }
     .btn-clear {
       position: absolute; top: 8px; right: 8px; background: rgba(0,0,0,0.6);
-      color: white; border: none; border-radius: 50%; width: 28px; height: 28px;
-      font-size: 0.85rem; cursor: pointer; display: flex; align-items: center; justify-content: center;
+      color: white; border: none; border-radius: 50%; width: 30px; height: 30px;
+      font-size: 0.9rem; cursor: pointer; display: flex; align-items: center; justify-content: center;
     }
     .btn-identify {
       width: 100%; background: linear-gradient(135deg, #0ea5e9, #2563eb);
-      color: white; border: none; border-radius: 12px; padding: 14px;
-      font-size: 0.95rem; font-weight: 600; cursor: pointer;
-      display: none; align-items: center; justify-content: center; gap: 8px; margin-bottom: 14px;
+      color: white; border: none; border-radius: 12px; padding: 15px;
+      font-size: 1rem; font-weight: 600; cursor: pointer;
+      display: none; align-items: center; justify-content: center; gap: 8px; margin-bottom: 16px;
     }
     .btn-identify.visible { display: flex; }
     .btn-identify:disabled { opacity: 0.5; cursor: not-allowed; }
-    #photo-result {
-      background: #132338; border: 1px solid #1e3a52;
-      border-radius: 16px; padding: 16px; display: none; margin-bottom: 14px;
-    }
-    #photo-result.visible { display: block; }
-    .result-body { font-size: 0.88rem; line-height: 1.8; color: #cbd5e1; white-space: pre-wrap; }
 
-    /* ═══ ZUKAN (Reference Library) TAB ═══ */
-    .zukan-header {
-      display: flex; align-items: center; justify-content: space-between;
-      margin-bottom: 12px;
-    }
-    .zukan-header h2 { font-size: 0.9rem; color: #94a3b8; }
-    .btn-add-ref {
-      background: #059669; color: white; border: none; border-radius: 10px;
-      padding: 8px 14px; font-size: 0.82rem; font-weight: 600; cursor: pointer;
-      display: flex; align-items: center; gap: 6px;
-    }
-
-    /* Add reference panel */
-    #add-ref-panel {
-      background: #132338; border: 1px solid #1e3a52;
-      border-radius: 14px; padding: 14px; margin-bottom: 14px; display: none;
-    }
-    #add-ref-panel.visible { display: block; }
-    .ref-capture-area {
-      border: 2px dashed #1e3a52; border-radius: 12px;
-      padding: 20px; text-align: center; cursor: pointer;
-      position: relative; overflow: hidden; margin-bottom: 10px; color: #64748b;
-      font-size: 0.82rem;
-    }
-    .ref-capture-area input[type="file"] {
-      position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%;
-    }
-    #ref-preview { display: none; width: 100%; border-radius: 10px; max-height: 180px; object-fit: cover; margin-bottom: 10px; }
-    .ref-name-row { display: flex; gap: 8px; margin-bottom: 8px; }
-    .ref-name-row input {
-      flex: 1; background: #0a1628; border: 1px solid #2a4a6a;
-      border-radius: 8px; padding: 8px 10px; color: #e0eaff; font-size: 0.85rem; outline: none;
-    }
-    .ref-name-row input::placeholder { color: #475569; }
-    .btn-autoname {
-      background: #7c3aed; color: white; border: none; border-radius: 8px;
-      padding: 8px 11px; font-size: 0.78rem; cursor: pointer; white-space: nowrap;
-    }
-    .btn-autoname:disabled { opacity: 0.5; cursor: not-allowed; }
-    .ref-actions { display: flex; gap: 8px; }
-    .btn-save-ref {
-      flex: 1; background: #059669; color: white; border: none;
-      border-radius: 10px; padding: 10px; font-size: 0.85rem; font-weight: 600; cursor: pointer;
-    }
-    .btn-save-ref:disabled { opacity: 0.45; cursor: not-allowed; }
-    .btn-cancel-ref {
-      background: #1e3a52; color: #94a3b8; border: none;
-      border-radius: 10px; padding: 10px 14px; font-size: 0.85rem; cursor: pointer;
-    }
-
-    /* Reference grid */
-    #ref-empty { color: #475569; font-size: 0.82rem; text-align: center; padding: 24px; }
-    .ref-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 14px; }
-    .ref-card {
-      background: #132338; border: 1px solid #1e3a52; border-radius: 12px;
-      overflow: hidden; position: relative;
-    }
-    .ref-card.selected { border-color: #059669; box-shadow: 0 0 0 1px #059669; }
-    .ref-card img { width: 100%; height: 90px; object-fit: cover; display: block; }
-    .ref-card-body { padding: 7px 9px 8px; }
-    .ref-card-name { font-size: 0.82rem; font-weight: 600; color: #e0eaff; }
-    .ref-card-actions { display: flex; align-items: center; justify-content: space-between; margin-top: 5px; }
-    .ref-select-btn {
-      font-size: 0.68rem; padding: 3px 8px; border-radius: 20px; border: none; cursor: pointer;
-      background: #1e3a52; color: #94a3b8; font-weight: 600;
-    }
-    .ref-card.selected .ref-select-btn { background: #059669; color: white; }
-    .ref-del-btn {
-      background: none; border: none; color: #4b5563; cursor: pointer; font-size: 0.85rem; padding: 2px 4px;
-    }
-    .ref-del-btn:hover { color: #ef4444; }
-
-    /* Use-refs info bar */
-    .ref-info-bar {
-      background: #0d2a1a; border: 1px solid #065f46; border-radius: 10px;
-      padding: 9px 12px; font-size: 0.75rem; color: #6ee7b7; margin-bottom: 10px;
-      display: none;
-    }
-    .ref-info-bar.visible { display: block; }
-
-    /* Shared */
     .spinner {
-      width: 17px; height: 17px; border: 2px solid rgba(255,255,255,0.3);
-      border-top-color: white; border-radius: 50%; animation: spin .8s linear infinite;
+      width: 18px; height: 18px; border: 2px solid rgba(255,255,255,0.3);
+      border-top-color: white; border-radius: 50%; animation: spin 0.8s linear infinite;
     }
     @keyframes spin { to { transform: rotate(360deg); } }
+
+    #photo-result {
+      background: #132338; border: 1px solid #1e3a52;
+      border-radius: 16px; padding: 18px; display: none; margin-bottom: 16px;
+    }
+    #photo-result.visible { display: block; }
+    .result-body { font-size: 0.9rem; line-height: 1.8; color: #cbd5e1; white-space: pre-wrap; }
+
     .error-box {
       background: #2d1515; border: 1px solid #7f1d1d; border-radius: 12px;
-      padding: 13px; color: #fca5a5; font-size: 0.82rem; margin-bottom: 12px; display: none;
+      padding: 14px; color: #fca5a5; font-size: 0.83rem; margin-bottom: 12px; display: none;
     }
     .error-box.visible { display: block; }
-    footer { padding: 14px; text-align: center; font-size: 0.7rem; color: #374151; }
+
+    footer { padding: 14px; text-align: center; font-size: 0.72rem; color: #374151; }
   </style>
 </head>
 <body>
 
 <header>
   <h1>🐟 魚図鑑 AI</h1>
-  <p>動画でリアルタイム識別 ＋ 図鑑参照で精度向上</p>
+  <p>動画で魚をリアルタイム識別</p>
 </header>
 
 <div class="container">
@@ -297,24 +256,23 @@
     <div class="key-status" id="key-status">APIキーを入力してください</div>
   </div>
 
-  <!-- Tabs -->
-  <div class="tabs">
-    <button id="tab-video" class="tab-btn active" onclick="switchTab('video')">📹 ライブ識別</button>
-    <button id="tab-photo" class="tab-btn"        onclick="switchTab('photo')">🖼️ 写真</button>
-    <button id="tab-zukan" class="tab-btn"        onclick="switchTab('zukan')">📚 図鑑登録</button>
+  <!-- Mode Toggle -->
+  <div class="mode-toggle">
+    <button id="btn-mode-video" class="mode-btn active" onclick="switchMode('video')">📹 ライブ識別</button>
+    <button id="btn-mode-photo" class="mode-btn" onclick="switchMode('photo')">🖼️ 写真</button>
   </div>
 
-  <!-- ══════════ VIDEO TAB ══════════ -->
-  <div id="tab-content-video">
-
-    <!-- Ref info bar -->
-    <div class="ref-info-bar" id="ref-info-bar"></div>
-
+  <!-- ═══ VIDEO MODE ═══ -->
+  <div id="video-mode">
     <div class="video-wrapper" id="video-wrapper">
       <video id="camera-video" autoplay playsinline muted></video>
+
       <div class="video-placeholder" id="video-placeholder">
-        <span>🎥</span><p>下のボタンで録画開始</p>
+        <span>🎥</span>
+        <p>下のボタンで録画開始</p>
       </div>
+
+      <!-- Countdown ring -->
       <div class="countdown-ring" id="countdown-ring">
         <svg viewBox="0 0 44 44" width="52" height="52">
           <circle cx="22" cy="22" r="21"/>
@@ -322,30 +280,35 @@
         </svg>
         <div class="countdown-text" id="countdown-text">10</div>
       </div>
+
+      <!-- Live tags (top-right) -->
       <div class="live-list" id="live-list"></div>
-      <div class="ref-badge" id="ref-badge">📚 図鑑参照中</div>
+
+      <!-- Fish name overlay (bottom) -->
       <div class="fish-overlay" id="fish-overlay">
         <div class="fish-overlay-name" id="overlay-name">—</div>
-        <div class="fish-overlay-sub"  id="overlay-sub">スキャン中...</div>
+        <div class="fish-overlay-sub" id="overlay-sub">解析中...</div>
       </div>
     </div>
 
+    <!-- Buttons -->
     <button class="btn-rec start" id="btn-rec" onclick="toggleRecording()">
       ● 録画開始（10秒）
     </button>
     <p class="hint" id="rec-hint">撮影しながら魚名をリアルタイム表示 → 終了後に一覧表示</p>
 
+    <!-- Summary -->
     <div id="summary">
       <div class="summary-title">📋 検出された魚 <strong id="summary-count"></strong></div>
       <ul class="fish-list" id="fish-list"></ul>
     </div>
   </div>
 
-  <!-- ══════════ PHOTO TAB ══════════ -->
-  <div id="tab-content-photo" style="display:none">
+  <!-- ═══ PHOTO MODE ═══ -->
+  <div id="photo-mode" style="display:none">
     <div class="capture-area">
       <input type="file" id="file-input" accept="image/*" capture="environment" onchange="handleFile(event)">
-      <div style="font-size:2.4rem;margin-bottom:7px">📷</div>
+      <div style="font-size:2.5rem;margin-bottom:8px">📷</div>
       <h2>魚の写真を撮影 / 選択</h2>
       <p>タップしてカメラを起動するか<br>写真ライブラリから選んでください</p>
     </div>
@@ -362,543 +325,358 @@
     </div>
   </div>
 
-  <!-- ══════════ ZUKAN TAB ══════════ -->
-  <div id="tab-content-zukan" style="display:none">
-    <div class="zukan-header">
-      <h2 id="zukan-count-label">登録済み: 0件</h2>
-      <button class="btn-add-ref" onclick="openAddPanel()">＋ 追加</button>
-    </div>
-
-    <!-- Add panel -->
-    <div id="add-ref-panel">
-      <div class="ref-capture-area" id="ref-capture-area">
-        <input type="file" id="ref-file-input" accept="image/*" capture="environment" onchange="handleRefFile(event)">
-        📷 図鑑の魚の写真を撮影 / 選択
-      </div>
-      <img id="ref-preview" src="" alt="">
-      <div class="ref-name-row">
-        <input type="text" id="ref-name-input" placeholder="魚の名前を入力（またはAI自動判定）">
-        <button class="btn-autoname" id="btn-autoname" onclick="autoNameRef()" disabled>AI判定</button>
-      </div>
-      <div class="ref-actions">
-        <button class="btn-save-ref" id="btn-save-ref" onclick="saveRef()" disabled>保存</button>
-        <button class="btn-cancel-ref" onclick="closeAddPanel()">キャンセル</button>
-      </div>
-    </div>
-
-    <div id="ref-empty">図鑑の魚を登録すると識別精度が上がります</div>
-    <div class="ref-grid" id="ref-grid" style="display:none"></div>
-  </div>
-
   <div class="error-box" id="error-box"></div>
+
 </div>
 
 <footer>Powered by Claude claude-opus-4-6 Vision API</footer>
 
 <script>
-// ═══════════════════════════════════════════
-//  IndexedDB
-// ═══════════════════════════════════════════
-const DB_NAME = 'sakana-refs-db';
-const DB_VER  = 1;
-const STORE   = 'refs';
-let db = null;
+  // ── State ─────────────────────────────────────────────
+  let videoStream   = null;
+  let isRecording   = false;
+  let recInterval   = null;
+  let countdownTimer = null;
+  let secondsLeft   = 10;
+  let detections    = [];   // [{name, count}]
+  let pendingCall   = false;
 
-function initDB() {
-  return new Promise((resolve, reject) => {
-    const req = indexedDB.open(DB_NAME, DB_VER);
-    req.onupgradeneeded = e => {
-      e.target.result.createObjectStore(STORE, { keyPath: 'id', autoIncrement: true });
-    };
-    req.onsuccess = e => { db = e.target.result; resolve(); };
-    req.onerror   = e => reject(e.target.error);
+  const DURATION    = 10;   // seconds
+  const SCAN_EVERY  = 2500; // ms between frames
+
+  // ── API Key ───────────────────────────────────────────
+  window.addEventListener('load', () => {
+    const saved = localStorage.getItem('anthropic_api_key');
+    if (saved) { document.getElementById('api-key-input').value = saved; updateKeyStatus(true); }
   });
-}
 
-function dbGetAll() {
-  return new Promise((resolve, reject) => {
-    const tx = db.transaction(STORE, 'readonly');
-    const req = tx.objectStore(STORE).getAll();
-    req.onsuccess = e => resolve(e.target.result);
-    req.onerror   = e => reject(e.target.error);
-  });
-}
+  function saveApiKey() {
+    const key = document.getElementById('api-key-input').value.trim();
+    if (!key.startsWith('sk-ant-')) { updateKeyStatus(false, '有効なAPIキーを入力してください'); return; }
+    localStorage.setItem('anthropic_api_key', key);
+    updateKeyStatus(true);
+  }
 
-function dbAdd(record) {
-  return new Promise((resolve, reject) => {
-    const tx  = db.transaction(STORE, 'readwrite');
-    const req = tx.objectStore(STORE).add(record);
-    req.onsuccess = e => resolve(e.target.result);
-    req.onerror   = e => reject(e.target.error);
-  });
-}
+  function updateKeyStatus(ok, msg) {
+    const el = document.getElementById('key-status');
+    el.textContent = ok ? '✓ APIキーが設定されています' : (msg || 'APIキーを入力してください');
+    el.className = 'key-status' + (ok ? ' ok' : '');
+  }
 
-function dbDelete(id) {
-  return new Promise((resolve, reject) => {
-    const tx  = db.transaction(STORE, 'readwrite');
-    const req = tx.objectStore(STORE).delete(id);
-    req.onsuccess = () => resolve();
-    req.onerror   = e => reject(e.target.error);
-  });
-}
+  function getApiKey() {
+    return localStorage.getItem('anthropic_api_key') ||
+           document.getElementById('api-key-input').value.trim();
+  }
 
-// ═══════════════════════════════════════════
-//  Image resize helper
-// ═══════════════════════════════════════════
-function resizeBase64(b64, maxDim) {
-  return new Promise(resolve => {
-    const img = new Image();
-    img.onload = () => {
-      const scale = Math.min(1, maxDim / Math.max(img.width, img.height));
-      const c = document.createElement('canvas');
-      c.width  = Math.round(img.width  * scale);
-      c.height = Math.round(img.height * scale);
-      c.getContext('2d').drawImage(img, 0, 0, c.width, c.height);
-      resolve(c.toDataURL('image/jpeg', 0.82).split(',')[1]);
-    };
-    img.src = 'data:image/jpeg;base64,' + b64;
-  });
-}
+  // ── Mode ─────────────────────────────────────────────
+  function switchMode(mode) {
+    document.getElementById('btn-mode-video').classList.toggle('active', mode === 'video');
+    document.getElementById('btn-mode-photo').classList.toggle('active', mode === 'photo');
+    document.getElementById('video-mode').style.display = mode === 'video' ? 'block' : 'none';
+    document.getElementById('photo-mode').style.display  = mode === 'photo' ? 'block' : 'none';
+    hideError();
+    if (mode === 'photo' && isRecording) stopRecording();
+    if (mode === 'photo' && videoStream) stopCamera();
+  }
 
-// ═══════════════════════════════════════════
-//  API Key
-// ═══════════════════════════════════════════
-window.addEventListener('load', async () => {
-  const saved = localStorage.getItem('anthropic_api_key');
-  if (saved) { document.getElementById('api-key-input').value = saved; updateKeyStatus(true); }
-  await initDB();
-  renderRefGrid();
-  updateRefInfoBar();
-});
+  // ── Camera ────────────────────────────────────────────
+  async function startCamera() {
+    try {
+      videoStream = await navigator.mediaDevices.getUserMedia({
+        video: { facingMode: 'environment', width: { ideal: 1280 }, height: { ideal: 960 } }
+      });
+      const v = document.getElementById('camera-video');
+      v.srcObject = videoStream;
+      document.getElementById('video-placeholder').style.display = 'none';
+    } catch (e) {
+      showError('カメラ起動失敗: ' + e.message);
+      throw e;
+    }
+  }
 
-function saveApiKey() {
-  const key = document.getElementById('api-key-input').value.trim();
-  if (!key.startsWith('sk-ant-')) { updateKeyStatus(false, '有効なAPIキーを入力してください'); return; }
-  localStorage.setItem('anthropic_api_key', key);
-  updateKeyStatus(true);
-}
-function updateKeyStatus(ok, msg) {
-  const el = document.getElementById('key-status');
-  el.textContent = ok ? '✓ APIキーが設定されています' : (msg || 'APIキーを入力してください');
-  el.className = 'key-status' + (ok ? ' ok' : '');
-}
-function getApiKey() {
-  return localStorage.getItem('anthropic_api_key') ||
-         document.getElementById('api-key-input').value.trim();
-}
+  function stopCamera() {
+    if (videoStream) { videoStream.getTracks().forEach(t => t.stop()); videoStream = null; }
+    document.getElementById('camera-video').srcObject = null;
+    document.getElementById('video-placeholder').style.display = 'flex';
+  }
 
-// ═══════════════════════════════════════════
-//  Tabs
-// ═══════════════════════════════════════════
-function switchTab(tab) {
-  ['video','photo','zukan'].forEach(t => {
-    document.getElementById('tab-' + t).classList.toggle('active', t === tab);
-    document.getElementById('tab-content-' + t).style.display = t === tab ? 'block' : 'none';
-  });
-  hideError();
-  if (tab !== 'video' && isRecording) stopRecording();
-  if (tab !== 'video' && videoStream) stopCamera();
-}
+  // ── Recording ─────────────────────────────────────────
+  async function toggleRecording() {
+    if (isRecording) { stopRecording(); return; }
+    if (!getApiKey()) { showError('APIキーを入力して「保存」を押してください。'); return; }
+    hideError();
+    hideSummary();
+    if (!videoStream) { await startCamera(); await sleep(800); }
+    startRecording();
+  }
 
-// ═══════════════════════════════════════════
-//  VIDEO MODE
-// ═══════════════════════════════════════════
-let videoStream  = null;
-let isRecording  = false;
-let recInterval  = null;
-let cntTimer     = null;
-let secondsLeft  = 10;
-let detections   = [];
-let pendingCall  = false;
+  function startRecording() {
+    isRecording  = true;
+    secondsLeft  = DURATION;
+    detections   = [];
+    pendingCall  = false;
 
-const DURATION   = 10;
-const SCAN_EVERY = 2800;
+    // UI
+    const btn = document.getElementById('btn-rec');
+    btn.className = 'btn-rec stop';
+    btn.innerHTML = '<div class="rec-dot"></div> 録画中... 停止';
+    document.getElementById('rec-hint').textContent = '魚をカメラに向けてください';
+    document.getElementById('video-wrapper').classList.add('scanning');
+    document.getElementById('live-list').innerHTML = '';
 
-async function toggleRecording() {
-  if (isRecording) { stopRecording(); return; }
-  if (!getApiKey()) { showError('APIキーを入力して「保存」を押してください。'); return; }
-  hideError(); hideSummary();
-  if (!videoStream) { try { await startCamera(); await sleep(900); } catch(e) { return; } }
-  startRecording();
-}
+    showOverlay('スキャン中...', '');
+    startCountdown();
 
-function startRecording() {
-  isRecording = true; secondsLeft = DURATION;
-  detections = []; pendingCall = false;
+    // Periodic frame capture
+    recInterval = setInterval(() => {
+      if (!pendingCall) sendFrame();
+    }, SCAN_EVERY);
 
-  const btn = document.getElementById('btn-rec');
-  btn.className = 'btn-rec stop';
-  btn.innerHTML = '<div class="rec-dot"></div> 録画中... 停止';
-  document.getElementById('rec-hint').textContent = '魚をカメラに向けてください';
-  document.getElementById('video-wrapper').classList.add('scanning');
-  document.getElementById('live-list').innerHTML = '';
+    // Send first frame immediately
+    sendFrame();
+  }
 
-  const refs = getSelectedRefs();
-  document.getElementById('ref-badge').classList.toggle('visible', refs.length > 0);
+  function stopRecording() {
+    isRecording = false;
+    clearInterval(recInterval);
+    clearInterval(countdownTimer);
 
-  showOverlay('スキャン中...', '');
-  startCountdown();
-  recInterval = setInterval(() => { if (!pendingCall) sendFrame(); }, SCAN_EVERY);
-  sendFrame();
-}
+    document.getElementById('btn-rec').className = 'btn-rec start';
+    document.getElementById('btn-rec').innerHTML = '● 録画開始（10秒）';
+    document.getElementById('rec-hint').textContent = '撮影しながら魚名をリアルタイム表示 → 終了後に一覧表示';
+    document.getElementById('video-wrapper').classList.remove('scanning');
+    document.getElementById('countdown-ring').style.display = 'none';
+    document.getElementById('fish-overlay').style.display = 'none';
 
-function stopRecording() {
-  isRecording = false;
-  clearInterval(recInterval); clearInterval(cntTimer);
-  const btn = document.getElementById('btn-rec');
-  btn.className = 'btn-rec start';
-  btn.innerHTML = '● 録画開始（10秒）';
-  document.getElementById('rec-hint').textContent = '撮影しながら魚名をリアルタイム表示 → 終了後に一覧表示';
-  document.getElementById('video-wrapper').classList.remove('scanning');
-  document.getElementById('countdown-ring').style.display = 'none';
-  document.getElementById('fish-overlay').style.display   = 'none';
-  document.getElementById('ref-badge').classList.remove('visible');
-  showSummary();
-}
+    showSummary();
+  }
 
-function startCountdown() {
-  const ring = document.getElementById('countdown-ring');
-  const text = document.getElementById('countdown-text');
-  const prog = document.getElementById('ring-progress');
-  const C = 2 * Math.PI * 21;
-  ring.style.display = 'block';
-  text.textContent = secondsLeft;
-  prog.style.strokeDashoffset = 0;
-  cntTimer = setInterval(() => {
-    secondsLeft--;
+  // ── Countdown ─────────────────────────────────────────
+  function startCountdown() {
+    const ring = document.getElementById('countdown-ring');
+    const text = document.getElementById('countdown-text');
+    const progress = document.getElementById('ring-progress');
+    const circumference = 2 * Math.PI * 21; // ≈132
+
+    ring.style.display = 'block';
     text.textContent = secondsLeft;
-    prog.style.strokeDashoffset = C * (1 - secondsLeft / DURATION);
-    if (secondsLeft <= 0) { clearInterval(cntTimer); stopRecording(); }
-  }, 1000);
-}
+    progress.style.strokeDashoffset = 0;
 
-async function startCamera() {
-  videoStream = await navigator.mediaDevices.getUserMedia({
-    video: { facingMode: 'environment', width: { ideal: 1280 }, height: { ideal: 960 } }
-  });
-  document.getElementById('camera-video').srcObject = videoStream;
-  document.getElementById('video-placeholder').style.display = 'none';
-}
-function stopCamera() {
-  if (videoStream) { videoStream.getTracks().forEach(t => t.stop()); videoStream = null; }
-  document.getElementById('camera-video').srcObject = null;
-  document.getElementById('video-placeholder').style.display = 'flex';
-}
+    countdownTimer = setInterval(() => {
+      secondsLeft--;
+      text.textContent = secondsLeft;
+      const offset = circumference * (1 - secondsLeft / DURATION);
+      progress.style.strokeDashoffset = offset;
 
-function captureFrame() {
-  const v = document.getElementById('camera-video');
-  const c = document.createElement('canvas');
-  c.width = v.videoWidth || 640; c.height = v.videoHeight || 480;
-  c.getContext('2d').drawImage(v, 0, 0);
-  return c.toDataURL('image/jpeg', 0.82).split(',')[1];
-}
+      if (secondsLeft <= 0) {
+        clearInterval(countdownTimer);
+        stopRecording();
+      }
+    }, 1000);
+  }
 
-async function sendFrame() {
-  if (!isRecording || pendingCall) return;
-  pendingCall = true;
-  const b64 = captureFrame();
-  try {
-    const name = await askFishName(b64);
-    if (name) { updateOverlay(name); addDetection(name); }
-  } catch(e) { /* silent */ }
-  finally { pendingCall = false; }
-}
+  // ── Frame capture & API ───────────────────────────────
+  function captureFrame() {
+    const video = document.getElementById('camera-video');
+    const canvas = document.createElement('canvas');
+    canvas.width  = video.videoWidth  || 640;
+    canvas.height = video.videoHeight || 480;
+    canvas.getContext('2d').drawImage(video, 0, 0);
+    return canvas.toDataURL('image/jpeg', 0.8).split(',')[1];
+  }
 
-// Selected ref IDs stored in memory
-let selectedRefIds = new Set();
-function getSelectedRefs() {
-  return _allRefs.filter(r => selectedRefIds.has(r.id));
-}
+  async function sendFrame() {
+    if (!isRecording || pendingCall) return;
+    pendingCall = true;
+    const b64 = captureFrame();
 
-let _allRefs = [];
+    try {
+      const name = await askFishName(b64);
+      if (name) {
+        updateOverlay(name);
+        addDetection(name);
+      }
+    } catch (e) {
+      // silent: keep recording even on API error
+    } finally {
+      pendingCall = false;
+    }
+  }
 
-async function askFishName(b64) {
-  const refs = getSelectedRefs();
-  const content = [];
-
-  // Live frame
-  content.push({ type: 'image', source: { type: 'base64', media_type: 'image/jpeg', data: b64 } });
-
-  let promptText;
-  if (refs.length > 0) {
-    // Add reference images (already resized to small)
-    refs.forEach((r, i) => {
-      content.push({ type: 'image', source: { type: 'base64', media_type: 'image/jpeg', data: r.refImg } });
+  async function askFishName(b64) {
+    const apiKey = getApiKey();
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': apiKey,
+        'anthropic-version': '2023-06-01',
+        'anthropic-dangerous-direct-browser-access': 'true'
+      },
+      body: JSON.stringify({
+        model: 'claude-opus-4-6',
+        max_tokens: 30,
+        messages: [{
+          role: 'user',
+          content: [
+            { type: 'image', source: { type: 'base64', media_type: 'image/jpeg', data: b64 } },
+            { type: 'text',  text: '画像の魚の和名だけを答えてください。魚が映っていなければ「なし」とだけ答えてください。説明不要。' }
+          ]
+        }]
+      })
     });
-    const refNames = refs.map(r => r.name).join('、');
-    promptText = `最初の画像が識別対象の写真です。その後の${refs.length}枚は図鑑の参照画像（${refNames}）です。\n参照画像を手がかりにして、識別対象の魚の和名だけを答えてください。参照以外の魚が映っている場合もその和名を答えてください。魚が映っていなければ「なし」とだけ答えてください。説明不要。`;
-  } else {
-    promptText = '画像の魚の和名だけを答えてください。魚が映っていなければ「なし」とだけ答えてください。説明不要。';
+
+    if (!res.ok) throw new Error('API error ' + res.status);
+    const data = await res.json();
+    const raw = (data.content?.[0]?.text || '').trim();
+    return raw === 'なし' || raw === '' ? null : raw;
   }
-  content.push({ type: 'text', text: promptText });
 
-  const res = await fetch('https://api.anthropic.com/v1/messages', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'x-api-key': getApiKey(),
-      'anthropic-version': '2023-06-01',
-      'anthropic-dangerous-direct-browser-access': 'true'
-    },
-    body: JSON.stringify({ model: 'claude-opus-4-6', max_tokens: 30, messages: [{ role: 'user', content }] })
-  });
-  if (!res.ok) throw new Error('API ' + res.status);
-  const data = await res.json();
-  const raw = (data.content?.[0]?.text || '').trim();
-  return (raw === 'なし' || raw === '') ? null : raw;
-}
-
-function showOverlay(name, sub) {
-  document.getElementById('fish-overlay').style.display = 'block';
-  document.getElementById('overlay-name').textContent = name;
-  document.getElementById('overlay-sub').textContent  = sub || '';
-}
-function updateOverlay(name) {
-  const el = document.getElementById('overlay-name');
-  el.style.opacity = '0';
-  setTimeout(() => { el.textContent = name; el.style.opacity = '1'; }, 140);
-  document.getElementById('overlay-sub').textContent = '識別済み';
-  document.getElementById('fish-overlay').style.display = 'block';
-}
-function addDetection(name) {
-  const ex = detections.find(d => d.name === name);
-  if (ex) { ex.count++; return; }
-  detections.push({ name, count: 1 });
-  const list = document.getElementById('live-list');
-  const tag = document.createElement('div');
-  tag.className = 'live-tag'; tag.textContent = name;
-  list.appendChild(tag);
-  while (list.children.length > 4) list.removeChild(list.firstChild);
-}
-
-function showSummary() {
-  const summary = document.getElementById('summary');
-  const list    = document.getElementById('fish-list');
-  const count   = document.getElementById('summary-count');
-  list.innerHTML = '';
-  const sorted = [...detections].sort((a,b) => b.count - a.count);
-  if (sorted.length === 0) {
-    list.innerHTML = '<li class="no-fish">魚は検出されませんでした</li>';
-    count.textContent = '（0種）';
-  } else {
-    count.textContent = `（${sorted.length}種）`;
-    sorted.forEach((d, i) => {
-      const li = document.createElement('li');
-      li.innerHTML = `<span class="num">${i+1}</span><span class="name">🐟 ${d.name}</span><span class="cnt">${d.count}回検出</span>`;
-      list.appendChild(li);
-    });
+  // ── Overlay ───────────────────────────────────────────
+  function showOverlay(name, sub) {
+    const overlay = document.getElementById('fish-overlay');
+    overlay.style.display = 'block';
+    document.getElementById('overlay-name').textContent = name;
+    document.getElementById('overlay-sub').textContent  = sub || '';
   }
-  summary.classList.add('visible');
-}
-function hideSummary() { document.getElementById('summary').classList.remove('visible'); }
 
-function updateRefInfoBar() {
-  const bar = document.getElementById('ref-info-bar');
-  const sel = selectedRefIds.size;
-  if (sel > 0) {
-    const names = _allRefs.filter(r => selectedRefIds.has(r.id)).map(r => r.name).join('、');
-    bar.textContent = `📚 図鑑参照ON: ${names}`;
-    bar.classList.add('visible');
-  } else {
-    bar.classList.remove('visible');
+  function updateOverlay(name) {
+    const nameEl = document.getElementById('overlay-name');
+    nameEl.style.opacity = '0';
+    setTimeout(() => {
+      nameEl.textContent = name;
+      nameEl.style.opacity = '1';
+    }, 150);
+    document.getElementById('overlay-sub').textContent = '識別済み';
+    document.getElementById('fish-overlay').style.display = 'block';
   }
-}
 
-// ═══════════════════════════════════════════
-//  PHOTO MODE
-// ═══════════════════════════════════════════
-let photoBase64 = null;
+  // ── Detection list ────────────────────────────────────
+  function addDetection(name) {
+    const existing = detections.find(d => d.name === name);
+    if (existing) { existing.count++; return; }
+    detections.push({ name, count: 1 });
 
-function handleFile(event) {
-  const file = event.target.files[0]; if (!file) return;
-  const reader = new FileReader();
-  reader.onload = e => {
-    photoBase64 = e.target.result.split(',')[1];
-    document.getElementById('preview-img').src = e.target.result;
-    document.getElementById('photo-preview-container').style.display = 'block';
-    document.getElementById('btn-identify').classList.add('visible');
+    // Live tag in top-right
+    const list = document.getElementById('live-list');
+    const tag = document.createElement('div');
+    tag.className = 'live-tag';
+    tag.textContent = name;
+    list.appendChild(tag);
+    // Keep max 4 tags visible
+    while (list.children.length > 4) list.removeChild(list.firstChild);
+  }
+
+  // ── Summary ───────────────────────────────────────────
+  function showSummary() {
+    const summary = document.getElementById('summary');
+    const list    = document.getElementById('fish-list');
+    const count   = document.getElementById('summary-count');
+
+    list.innerHTML = '';
+
+    // Sort by count desc
+    const sorted = [...detections].sort((a, b) => b.count - a.count);
+    const unique = sorted.filter((d, i, arr) => arr.findIndex(x => x.name === d.name) === i);
+
+    if (unique.length === 0) {
+      list.innerHTML = '<li class="no-fish">魚は検出されませんでした</li>';
+      count.textContent = '（0種）';
+    } else {
+      count.textContent = `（${unique.length}種）`;
+      unique.forEach((d, i) => {
+        const li = document.createElement('li');
+        li.innerHTML = `
+          <span class="num">${i + 1}</span>
+          <span class="name">🐟 ${d.name}</span>
+          <span class="count">${d.count}回検出</span>`;
+        list.appendChild(li);
+      });
+    }
+    summary.classList.add('visible');
+  }
+
+  function hideSummary() {
+    document.getElementById('summary').classList.remove('visible');
+    document.getElementById('live-list').innerHTML = '';
+  }
+
+  // ── Photo Mode ────────────────────────────────────────
+  let photoBase64 = null;
+
+  function handleFile(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      photoBase64 = e.target.result.split(',')[1];
+      document.getElementById('preview-img').src = e.target.result;
+      document.getElementById('photo-preview-container').style.display = 'block';
+      document.getElementById('btn-identify').classList.add('visible');
+      document.getElementById('photo-result').classList.remove('visible');
+    };
+    reader.readAsDataURL(file);
+  }
+
+  function clearImage() {
+    photoBase64 = null;
+    document.getElementById('file-input').value = '';
+    document.getElementById('photo-preview-container').style.display = 'none';
+    document.getElementById('btn-identify').classList.remove('visible');
     document.getElementById('photo-result').classList.remove('visible');
-  };
-  reader.readAsDataURL(file);
-}
-function clearImage() {
-  photoBase64 = null;
-  document.getElementById('file-input').value = '';
-  document.getElementById('photo-preview-container').style.display = 'none';
-  document.getElementById('btn-identify').classList.remove('visible');
-  document.getElementById('photo-result').classList.remove('visible');
-}
-async function identifyPhoto() {
-  if (!getApiKey()) { showError('APIキーを入力してください。'); return; }
-  if (!photoBase64) { showError('写真を選択してください。'); return; }
-  const btn = document.getElementById('btn-identify');
-  const txt = document.getElementById('btn-text');
-  const sp  = document.getElementById('photo-spinner');
-  btn.disabled = true; sp.style.display = 'block'; txt.textContent = '解析中...';
-  hideError();
-  try {
-    const res = await fetch('https://api.anthropic.com/v1/messages', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json', 'x-api-key': getApiKey(),
-        'anthropic-version': '2023-06-01', 'anthropic-dangerous-direct-browser-access': 'true'
-      },
-      body: JSON.stringify({
-        model: 'claude-opus-4-6', max_tokens: 800,
-        messages: [{ role: 'user', content: [
-          { type: 'image', source: { type: 'base64', media_type: 'image/jpeg', data: photoBase64 } },
-          { type: 'text',  text: 'この画像の魚を識別してください。\n\n【魚の名前】\n【特徴】\n【生息地】\n【豆知識】\n\nの順で答えてください。魚がいなければその旨を。' }
-        ]}]
-      })
-    });
-    if (!res.ok) { const e=await res.json().catch(()=>({})); throw new Error(e?.error?.message||res.status); }
-    const data = await res.json();
-    document.getElementById('photo-result-body').textContent = data.content?.[0]?.text || '';
-    document.getElementById('photo-result').classList.add('visible');
-  } catch(e) { showError('エラー: ' + e.message); }
-  finally { btn.disabled=false; sp.style.display='none'; txt.textContent='🔍 この魚を調べる'; }
-}
-
-// ═══════════════════════════════════════════
-//  ZUKAN (Reference Library)
-// ═══════════════════════════════════════════
-let refBase64 = null;   // current image being added
-
-function openAddPanel() {
-  refBase64 = null;
-  document.getElementById('ref-preview').style.display = 'none';
-  document.getElementById('ref-preview').src = '';
-  document.getElementById('ref-name-input').value = '';
-  document.getElementById('ref-file-input').value = '';
-  document.getElementById('btn-autoname').disabled = true;
-  document.getElementById('btn-save-ref').disabled = true;
-  document.getElementById('add-ref-panel').classList.add('visible');
-}
-function closeAddPanel() {
-  refBase64 = null;
-  document.getElementById('add-ref-panel').classList.remove('visible');
-}
-
-function handleRefFile(event) {
-  const file = event.target.files[0]; if (!file) return;
-  const reader = new FileReader();
-  reader.onload = e => {
-    refBase64 = e.target.result.split(',')[1];
-    const prev = document.getElementById('ref-preview');
-    prev.src = e.target.result; prev.style.display = 'block';
-    document.getElementById('btn-autoname').disabled = false;
-    document.getElementById('btn-save-ref').disabled = false;
-  };
-  reader.readAsDataURL(file);
-}
-
-async function autoNameRef() {
-  if (!getApiKey()) { showError('APIキーを設定してください。'); return; }
-  if (!refBase64)   return;
-  const btn = document.getElementById('btn-autoname');
-  btn.disabled = true; btn.textContent = '判定中...';
-  try {
-    const res = await fetch('https://api.anthropic.com/v1/messages', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json', 'x-api-key': getApiKey(),
-        'anthropic-version': '2023-06-01', 'anthropic-dangerous-direct-browser-access': 'true'
-      },
-      body: JSON.stringify({
-        model: 'claude-opus-4-6', max_tokens: 30,
-        messages: [{ role: 'user', content: [
-          { type: 'image', source: { type: 'base64', media_type: 'image/jpeg', data: refBase64 } },
-          { type: 'text',  text: '画像の魚の和名だけを答えてください。説明不要。' }
-        ]}]
-      })
-    });
-    if (!res.ok) throw new Error('API ' + res.status);
-    const data = await res.json();
-    const name = (data.content?.[0]?.text || '').trim();
-    if (name) document.getElementById('ref-name-input').value = name;
-  } catch(e) { showError('AI判定エラー: ' + e.message); }
-  finally { btn.disabled = false; btn.textContent = 'AI判定'; }
-}
-
-async function saveRef() {
-  const name = document.getElementById('ref-name-input').value.trim();
-  if (!name)     { showError('魚の名前を入力してください。'); return; }
-  if (!refBase64){ showError('写真を選択してください。'); return; }
-
-  const btn = document.getElementById('btn-save-ref');
-  btn.disabled = true; btn.textContent = '保存中...';
-  try {
-    // Resize: display image (300px) and tiny ref image (280px) for API
-    const dispImg = await resizeBase64(refBase64, 300);
-    const refImg  = await resizeBase64(refBase64, 280);
-    await dbAdd({ name, dispImg, refImg, created: Date.now() });
-    await renderRefGrid();
-    updateRefInfoBar();
-    closeAddPanel();
-  } catch(e) { showError('保存エラー: ' + e.message); }
-  finally { btn.disabled = false; btn.textContent = '保存'; }
-}
-
-async function renderRefGrid() {
-  _allRefs = await dbGetAll();
-  const grid  = document.getElementById('ref-grid');
-  const empty = document.getElementById('ref-empty');
-  const label = document.getElementById('zukan-count-label');
-
-  label.textContent = `登録済み: ${_allRefs.length}件`;
-
-  if (_allRefs.length === 0) {
-    grid.style.display  = 'none';
-    empty.style.display = 'block';
-    return;
   }
-  empty.style.display = 'none';
-  grid.style.display  = 'grid';
-  grid.innerHTML = '';
 
-  _allRefs.forEach(r => {
-    const card = document.createElement('div');
-    card.className = 'ref-card' + (selectedRefIds.has(r.id) ? ' selected' : '');
-    card.id = 'ref-card-' + r.id;
-    card.innerHTML = `
-      <img src="data:image/jpeg;base64,${r.dispImg}" alt="${r.name}">
-      <div class="ref-card-body">
-        <div class="ref-card-name">${r.name}</div>
-        <div class="ref-card-actions">
-          <button class="ref-select-btn" onclick="toggleRefSelect(${r.id})">
-            ${selectedRefIds.has(r.id) ? '✓ 参照ON' : '参照OFF'}
-          </button>
-          <button class="ref-del-btn" onclick="deleteRef(${r.id})" title="削除">🗑</button>
-        </div>
-      </div>`;
-    grid.appendChild(card);
-  });
-}
+  async function identifyPhoto() {
+    if (!getApiKey()) { showError('APIキーを入力してください。'); return; }
+    if (!photoBase64) { showError('写真を選択してください。'); return; }
 
-function toggleRefSelect(id) {
-  if (selectedRefIds.has(id)) selectedRefIds.delete(id);
-  else selectedRefIds.add(id);
-  renderRefGrid();
-  updateRefInfoBar();
-}
+    const btn = document.getElementById('btn-identify');
+    const txt = document.getElementById('btn-text');
+    const sp  = document.getElementById('photo-spinner');
+    btn.disabled = true; sp.style.display = 'block'; txt.textContent = '解析中...';
+    hideError();
 
-async function deleteRef(id) {
-  if (!confirm('この参照画像を削除しますか？')) return;
-  selectedRefIds.delete(id);
-  await dbDelete(id);
-  await renderRefGrid();
-  updateRefInfoBar();
-}
+    try {
+      const res = await fetch('https://api.anthropic.com/v1/messages', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'x-api-key': getApiKey(),
+          'anthropic-version': '2023-06-01',
+          'anthropic-dangerous-direct-browser-access': 'true'
+        },
+        body: JSON.stringify({
+          model: 'claude-opus-4-6',
+          max_tokens: 800,
+          messages: [{
+            role: 'user',
+            content: [
+              { type: 'image', source: { type: 'base64', media_type: 'image/jpeg', data: photoBase64 } },
+              { type: 'text',  text: 'この画像の魚を識別してください。\n\n【魚の名前】\n【特徴】\n【生息地】\n【豆知識】\n\nの順で答えてください。魚がいなければその旨を。' }
+            ]
+          }]
+        })
+      });
+      if (!res.ok) { const e = await res.json().catch(()=>({})); throw new Error(e?.error?.message || res.status); }
+      const data = await res.json();
+      document.getElementById('photo-result-body').textContent = data.content?.[0]?.text || '';
+      document.getElementById('photo-result').classList.add('visible');
+    } catch (e) {
+      showError('エラー: ' + e.message);
+    } finally {
+      btn.disabled = false; sp.style.display = 'none'; txt.textContent = '🔍 この魚を調べる';
+    }
+  }
 
-// ═══════════════════════════════════════════
-//  Helpers
-// ═══════════════════════════════════════════
-function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
-function showError(msg) {
-  const el = document.getElementById('error-box');
-  el.textContent = msg; el.classList.add('visible');
-}
-function hideError() { document.getElementById('error-box').classList.remove('visible'); }
+  // ── Helpers ───────────────────────────────────────────
+  function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
+
+  function showError(msg) {
+    const el = document.getElementById('error-box');
+    el.textContent = msg; el.classList.add('visible');
+  }
+
+  function hideError() { document.getElementById('error-box').classList.remove('visible'); }
 </script>
 </body>
 </html>
