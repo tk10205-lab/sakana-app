@@ -20,108 +20,177 @@
     header {
       width: 100%;
       background: linear-gradient(135deg, #0d2137, #1a4a6b);
-      padding: 20px;
+      padding: 16px 20px;
       text-align: center;
-      box-shadow: 0 2px 20px rgba(0, 150, 255, 0.2);
+      box-shadow: 0 2px 20px rgba(0,150,255,0.2);
     }
+    header h1 { font-size: 1.4rem; font-weight: 700; color: #7dd3fc; }
+    header p  { font-size: 0.8rem; color: #94a3b8; margin-top: 3px; }
 
-    header h1 { font-size: 1.6rem; font-weight: 700; color: #7dd3fc; letter-spacing: 0.05em; }
-    header p { font-size: 0.85rem; color: #94a3b8; margin-top: 4px; }
-
-    .container { width: 100%; max-width: 480px; padding: 20px; flex: 1; }
+    .container { width: 100%; max-width: 480px; padding: 16px; flex: 1; }
 
     /* API Key */
     .api-key-section {
       background: #132338; border: 1px solid #1e3a52;
-      border-radius: 12px; padding: 16px; margin-bottom: 20px;
+      border-radius: 12px; padding: 14px; margin-bottom: 16px;
     }
-    .api-key-section label { font-size: 0.8rem; color: #94a3b8; display: block; margin-bottom: 8px; }
+    .api-key-section label { font-size: 0.78rem; color: #94a3b8; display: block; margin-bottom: 7px; }
     .api-key-row { display: flex; gap: 8px; }
     .api-key-row input {
       flex: 1; background: #0a1628; border: 1px solid #2a4a6a;
-      border-radius: 8px; padding: 10px 12px; color: #e0eaff;
+      border-radius: 8px; padding: 9px 12px; color: #e0eaff;
       font-size: 0.85rem; font-family: monospace; outline: none;
     }
     .api-key-row input:focus { border-color: #3b82f6; }
     .btn-save {
       background: #1d4ed8; color: white; border: none; border-radius: 8px;
-      padding: 10px 16px; font-size: 0.85rem; cursor: pointer; white-space: nowrap;
+      padding: 9px 14px; font-size: 0.85rem; cursor: pointer;
     }
-    .btn-save:hover { background: #2563eb; }
-    .key-status { font-size: 0.75rem; margin-top: 6px; color: #94a3b8; }
+    .key-status { font-size: 0.73rem; margin-top: 5px; color: #94a3b8; }
     .key-status.ok { color: #4ade80; }
 
     /* Mode Toggle */
     .mode-toggle {
-      display: flex; gap: 8px; margin-bottom: 16px;
+      display: flex; gap: 6px; margin-bottom: 14px;
       background: #0d1f33; border-radius: 12px; padding: 4px;
     }
     .mode-btn {
-      flex: 1; padding: 10px; border: none; border-radius: 9px;
-      font-size: 0.85rem; font-weight: 600; cursor: pointer;
+      flex: 1; padding: 9px; border: none; border-radius: 9px;
+      font-size: 0.82rem; font-weight: 600; cursor: pointer;
       background: transparent; color: #64748b; transition: all 0.2s;
     }
     .mode-btn.active { background: #1d4ed8; color: white; }
 
-    /* Video */
+    /* ═══ VIDEO MODE ═══ */
     .video-wrapper {
       position: relative; border-radius: 16px; overflow: hidden;
       background: #0d1f33; margin-bottom: 12px;
       aspect-ratio: 4/3;
     }
-    #camera-video {
-      width: 100%; height: 100%; object-fit: cover; display: block;
-    }
+    #camera-video { width: 100%; height: 100%; object-fit: cover; display: block; }
+
     .video-placeholder {
       position: absolute; inset: 0; display: flex; flex-direction: column;
       align-items: center; justify-content: center; gap: 10px; color: #475569;
     }
     .video-placeholder span { font-size: 3rem; }
-    .video-placeholder p { font-size: 0.85rem; }
-    .frame-flash {
-      position: absolute; inset: 0; background: white;
-      opacity: 0; pointer-events: none; transition: opacity 0.05s;
-      border-radius: 16px;
+    .video-placeholder p { font-size: 0.82rem; }
+
+    /* Countdown ring */
+    .countdown-ring {
+      position: absolute; top: 10px; left: 10px;
+      width: 52px; height: 52px; display: none;
     }
-    .frame-counter {
-      position: absolute; top: 10px; right: 10px;
-      background: rgba(0,0,0,0.6); color: #4ade80;
-      padding: 4px 10px; border-radius: 20px; font-size: 0.8rem; font-weight: 700;
+    .countdown-ring svg { transform: rotate(-90deg); }
+    .countdown-ring circle {
+      fill: none; stroke: rgba(255,255,255,0.15); stroke-width: 4;
+    }
+    .countdown-ring .progress {
+      stroke: #0ea5e9; stroke-width: 4;
+      stroke-dasharray: 132; stroke-dashcap: round;
+      transition: stroke-dashoffset 1s linear;
+    }
+    .countdown-text {
+      position: absolute; inset: 0; display: flex;
+      align-items: center; justify-content: center;
+      font-size: 1.2rem; font-weight: 700; color: white;
+    }
+
+    /* Live fish name overlay */
+    .fish-overlay {
+      position: absolute; bottom: 0; left: 0; right: 0;
+      background: linear-gradient(transparent, rgba(0,0,0,0.75));
+      padding: 20px 14px 12px;
       display: none;
     }
+    .fish-overlay-name {
+      font-size: 1.4rem; font-weight: 700; color: #7dd3fc;
+      text-shadow: 0 1px 6px rgba(0,0,0,0.8);
+      transition: opacity 0.3s;
+    }
+    .fish-overlay-sub {
+      font-size: 0.75rem; color: rgba(255,255,255,0.6); margin-top: 2px;
+    }
 
-    .btn-capture {
-      width: 100%; background: linear-gradient(135deg, #059669, #0ea5e9);
-      color: white; border: none; border-radius: 12px; padding: 16px;
-      font-size: 1rem; font-weight: 600; cursor: pointer;
-      transition: opacity 0.2s, transform 0.1s; margin-bottom: 8px;
+    /* Scanning pulse ring around video */
+    .video-wrapper.scanning::after {
+      content: ''; position: absolute; inset: 0; border-radius: 16px;
+      border: 2px solid #0ea5e9;
+      animation: scanPulse 1.5s ease-in-out infinite;
+      pointer-events: none;
+    }
+    @keyframes scanPulse {
+      0%, 100% { opacity: 0.3; }
+      50% { opacity: 1; }
+    }
+
+    /* Detected list (during recording) */
+    .live-list {
+      position: absolute; top: 10px; right: 10px;
+      display: flex; flex-direction: column; gap: 4px; max-width: 140px;
+    }
+    .live-tag {
+      background: rgba(14,165,233,0.85); color: white;
+      font-size: 0.72rem; font-weight: 600; padding: 3px 8px;
+      border-radius: 20px; white-space: nowrap; overflow: hidden;
+      text-overflow: ellipsis;
+      animation: tagPop 0.3s ease;
+    }
+    @keyframes tagPop {
+      from { opacity: 0; transform: scale(0.7); }
+      to   { opacity: 1; transform: scale(1); }
+    }
+
+    /* Buttons */
+    .btn-rec {
+      width: 100%; border: none; border-radius: 12px; padding: 15px;
+      font-size: 1rem; font-weight: 700; cursor: pointer;
       display: flex; align-items: center; justify-content: center; gap: 8px;
+      margin-bottom: 6px; transition: opacity 0.2s, transform 0.1s;
     }
-    .btn-capture:hover { opacity: 0.9; }
-    .btn-capture:active { transform: scale(0.98); }
-    .btn-capture:disabled { opacity: 0.5; cursor: not-allowed; }
+    .btn-rec:active { transform: scale(0.98); }
+    .btn-rec:disabled { opacity: 0.45; cursor: not-allowed; }
+    .btn-rec.start { background: linear-gradient(135deg, #dc2626, #b91c1c); color: white; }
+    .btn-rec.stop  { background: linear-gradient(135deg, #6b7280, #4b5563); color: white; }
 
-    .capture-hint { font-size: 0.75rem; color: #475569; text-align: center; margin-bottom: 16px; }
+    .rec-dot {
+      width: 12px; height: 12px; background: white; border-radius: 50%;
+      animation: blink 0.8s step-end infinite;
+    }
+    @keyframes blink { 0%,100%{opacity:1;} 50%{opacity:0.2;} }
 
-    /* Frames preview strip */
-    #frames-strip { display: none; gap: 6px; margin-bottom: 16px; }
-    #frames-strip.visible { display: flex; }
-    .frame-thumb {
-      flex: 1; border-radius: 8px; overflow: hidden;
-      border: 2px solid #1e3a52; position: relative;
+    .hint { font-size: 0.73rem; color: #475569; text-align: center; margin-bottom: 14px; }
+
+    /* Summary */
+    #summary {
+      background: #132338; border: 1px solid #1e3a52;
+      border-radius: 16px; padding: 18px; display: none; margin-bottom: 16px;
     }
-    .frame-thumb img { width: 100%; height: 70px; object-fit: cover; display: block; }
-    .frame-thumb span {
-      position: absolute; bottom: 2px; left: 50%; transform: translateX(-50%);
-      background: rgba(0,0,0,0.6); color: #94a3b8;
-      font-size: 0.65rem; padding: 1px 6px; border-radius: 10px;
+    #summary.visible { display: block; }
+    .summary-title {
+      font-size: 0.85rem; color: #94a3b8; margin-bottom: 12px;
+      border-bottom: 1px solid #1e3a52; padding-bottom: 10px;
     }
+    .summary-title strong { color: #7dd3fc; font-size: 1rem; }
+    .fish-list { list-style: none; display: flex; flex-direction: column; gap: 8px; }
+    .fish-list li {
+      display: flex; align-items: center; gap: 10px;
+      background: #0d1f33; border-radius: 10px; padding: 10px 14px;
+    }
+    .fish-list li .num {
+      background: #1d4ed8; color: white; border-radius: 50%;
+      width: 22px; height: 22px; font-size: 0.75rem; font-weight: 700;
+      display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+    }
+    .fish-list li .name { font-size: 0.95rem; color: #e0eaff; font-weight: 600; }
+    .fish-list li .count { margin-left: auto; font-size: 0.75rem; color: #64748b; }
+    .no-fish { color: #64748b; font-size: 0.85rem; text-align: center; padding: 12px; }
 
     /* Photo mode */
     .capture-area {
       background: #132338; border: 2px dashed #2a4a6a; border-radius: 16px;
       padding: 30px 20px; text-align: center; cursor: pointer;
-      transition: border-color 0.2s; position: relative; overflow: hidden; margin-bottom: 16px;
+      transition: border-color 0.2s; position: relative; overflow: hidden; margin-bottom: 14px;
     }
     .capture-area:hover { border-color: #3b82f6; }
     .capture-area input[type="file"] {
@@ -130,64 +199,49 @@
     .capture-area h2 { font-size: 1rem; color: #7dd3fc; margin-bottom: 6px; }
     .capture-area p { font-size: 0.8rem; color: #64748b; }
 
-    #photo-preview-container { display: none; margin-bottom: 16px; position: relative; }
-    #preview-img { width: 100%; border-radius: 12px; display: block; max-height: 300px; object-fit: cover; }
+    #photo-preview-container { display: none; margin-bottom: 14px; position: relative; }
+    #preview-img { width: 100%; border-radius: 12px; display: block; max-height: 280px; object-fit: cover; }
     .btn-clear {
       position: absolute; top: 8px; right: 8px; background: rgba(0,0,0,0.6);
-      color: white; border: none; border-radius: 50%; width: 32px; height: 32px;
-      font-size: 1rem; cursor: pointer; display: flex; align-items: center; justify-content: center;
+      color: white; border: none; border-radius: 50%; width: 30px; height: 30px;
+      font-size: 0.9rem; cursor: pointer; display: flex; align-items: center; justify-content: center;
     }
-
-    /* Identify Button (photo mode) */
     .btn-identify {
       width: 100%; background: linear-gradient(135deg, #0ea5e9, #2563eb);
-      color: white; border: none; border-radius: 12px; padding: 16px;
+      color: white; border: none; border-radius: 12px; padding: 15px;
       font-size: 1rem; font-weight: 600; cursor: pointer;
-      transition: opacity 0.2s, transform 0.1s; display: none;
-      align-items: center; justify-content: center; gap: 8px; margin-bottom: 20px;
+      display: none; align-items: center; justify-content: center; gap: 8px; margin-bottom: 16px;
     }
-    .btn-identify:active { transform: scale(0.98); }
-    .btn-identify:disabled { opacity: 0.5; cursor: not-allowed; }
     .btn-identify.visible { display: flex; }
+    .btn-identify:disabled { opacity: 0.5; cursor: not-allowed; }
 
-    /* Spinner */
     .spinner {
-      width: 20px; height: 20px; border: 2px solid rgba(255,255,255,0.3);
+      width: 18px; height: 18px; border: 2px solid rgba(255,255,255,0.3);
       border-top-color: white; border-radius: 50%; animation: spin 0.8s linear infinite;
     }
     @keyframes spin { to { transform: rotate(360deg); } }
 
-    /* Result */
-    #result {
+    #photo-result {
       background: #132338; border: 1px solid #1e3a52;
-      border-radius: 16px; padding: 20px; display: none; margin-bottom: 16px;
+      border-radius: 16px; padding: 18px; display: none; margin-bottom: 16px;
     }
-    #result.visible { display: block; }
-    .result-header {
-      display: flex; align-items: center; gap: 10px;
-      margin-bottom: 16px; padding-bottom: 12px; border-bottom: 1px solid #1e3a52;
-    }
-    .result-header h3 { font-size: 1.2rem; color: #7dd3fc; }
+    #photo-result.visible { display: block; }
     .result-body { font-size: 0.9rem; line-height: 1.8; color: #cbd5e1; white-space: pre-wrap; }
-    .result-frames-count {
-      font-size: 0.75rem; color: #4ade80; margin-bottom: 8px;
-    }
 
-    /* Error */
     .error-box {
       background: #2d1515; border: 1px solid #7f1d1d; border-radius: 12px;
-      padding: 16px; color: #fca5a5; font-size: 0.85rem; margin-top: 12px; display: none;
+      padding: 14px; color: #fca5a5; font-size: 0.83rem; margin-bottom: 12px; display: none;
     }
     .error-box.visible { display: block; }
 
-    footer { padding: 16px; text-align: center; font-size: 0.75rem; color: #374151; }
+    footer { padding: 14px; text-align: center; font-size: 0.72rem; color: #374151; }
   </style>
 </head>
 <body>
 
 <header>
   <h1>🐟 魚図鑑 AI</h1>
-  <p>写真から魚の名前をAIが教えます</p>
+  <p>動画で魚をリアルタイム識別</p>
 </header>
 
 <div class="container">
@@ -204,67 +258,73 @@
 
   <!-- Mode Toggle -->
   <div class="mode-toggle">
-    <button id="btn-mode-video" class="mode-btn active" onclick="switchMode('video')">📹 ライブカメラ</button>
-    <button id="btn-mode-photo" class="mode-btn" onclick="switchMode('photo')">🖼️ 写真を選択</button>
+    <button id="btn-mode-video" class="mode-btn active" onclick="switchMode('video')">📹 ライブ識別</button>
+    <button id="btn-mode-photo" class="mode-btn" onclick="switchMode('photo')">🖼️ 写真</button>
   </div>
 
-  <!-- ===== VIDEO MODE ===== -->
+  <!-- ═══ VIDEO MODE ═══ -->
   <div id="video-mode">
-    <div class="video-wrapper">
+    <div class="video-wrapper" id="video-wrapper">
       <video id="camera-video" autoplay playsinline muted></video>
+
       <div class="video-placeholder" id="video-placeholder">
-        <span>📷</span>
-        <p>下のボタンを押してカメラを起動</p>
+        <span>🎥</span>
+        <p>下のボタンで録画開始</p>
       </div>
-      <div class="frame-flash" id="frame-flash"></div>
-      <div class="frame-counter" id="frame-counter"></div>
+
+      <!-- Countdown ring -->
+      <div class="countdown-ring" id="countdown-ring">
+        <svg viewBox="0 0 44 44" width="52" height="52">
+          <circle cx="22" cy="22" r="21"/>
+          <circle class="progress" id="ring-progress" cx="22" cy="22" r="21"/>
+        </svg>
+        <div class="countdown-text" id="countdown-text">10</div>
+      </div>
+
+      <!-- Live tags (top-right) -->
+      <div class="live-list" id="live-list"></div>
+
+      <!-- Fish name overlay (bottom) -->
+      <div class="fish-overlay" id="fish-overlay">
+        <div class="fish-overlay-name" id="overlay-name">—</div>
+        <div class="fish-overlay-sub" id="overlay-sub">解析中...</div>
+      </div>
     </div>
 
-    <button class="btn-capture" id="btn-capture" onclick="startVideoCapture()">
-      <span id="capture-btn-text">📹 カメラ起動 → 自動撮影して識別</span>
-      <div class="spinner" id="capture-spinner" style="display:none"></div>
+    <!-- Buttons -->
+    <button class="btn-rec start" id="btn-rec" onclick="toggleRecording()">
+      ● 録画開始（10秒）
     </button>
-    <p class="capture-hint">3フレームを自動撮影してAIが総合判断します（精度向上）</p>
+    <p class="hint" id="rec-hint">撮影しながら魚名をリアルタイム表示 → 終了後に一覧表示</p>
 
-    <!-- Frame thumbnails -->
-    <div id="frames-strip">
-      <div class="frame-thumb"><img id="thumb0" src=""><span>フレーム1</span></div>
-      <div class="frame-thumb"><img id="thumb1" src=""><span>フレーム2</span></div>
-      <div class="frame-thumb"><img id="thumb2" src=""><span>フレーム3</span></div>
+    <!-- Summary -->
+    <div id="summary">
+      <div class="summary-title">📋 検出された魚 <strong id="summary-count"></strong></div>
+      <ul class="fish-list" id="fish-list"></ul>
     </div>
   </div>
 
-  <!-- ===== PHOTO MODE ===== -->
+  <!-- ═══ PHOTO MODE ═══ -->
   <div id="photo-mode" style="display:none">
-    <div class="capture-area" id="capture-area">
+    <div class="capture-area">
       <input type="file" id="file-input" accept="image/*" capture="environment" onchange="handleFile(event)">
-      <div style="font-size:3rem;margin-bottom:10px">📷</div>
+      <div style="font-size:2.5rem;margin-bottom:8px">📷</div>
       <h2>魚の写真を撮影 / 選択</h2>
       <p>タップしてカメラを起動するか<br>写真ライブラリから選んでください</p>
     </div>
-
     <div id="photo-preview-container">
       <img id="preview-img" src="" alt="プレビュー">
       <button class="btn-clear" onclick="clearImage()">✕</button>
     </div>
-
-    <button class="btn-identify" id="btn-identify" onclick="identifyFromPhoto()">
+    <button class="btn-identify" id="btn-identify" onclick="identifyPhoto()">
       <span id="btn-text">🔍 この魚を調べる</span>
       <div class="spinner" id="photo-spinner" style="display:none"></div>
     </button>
-  </div>
-
-  <!-- Result -->
-  <div id="result">
-    <div class="result-header">
-      <span style="font-size:2rem">🐠</span>
-      <h3>識別結果</h3>
+    <div id="photo-result">
+      <div class="result-body" id="photo-result-body"></div>
     </div>
-    <div class="result-frames-count" id="result-frames-count"></div>
-    <div class="result-body" id="result-body"></div>
   </div>
 
-  <!-- Error -->
   <div class="error-box" id="error-box"></div>
 
 </div>
@@ -272,35 +332,35 @@
 <footer>Powered by Claude claude-opus-4-6 Vision API</footer>
 
 <script>
-  let currentMode = 'video';
-  let videoStream = null;
-  let capturedFrames = [];
-  let photoBase64 = null;
-  let photoMediaType = 'image/jpeg';
+  // ── State ─────────────────────────────────────────────
+  let videoStream   = null;
+  let isRecording   = false;
+  let recInterval   = null;
+  let countdownTimer = null;
+  let secondsLeft   = 10;
+  let detections    = [];   // [{name, count}]
+  let pendingCall   = false;
 
-  // ── API Key ──────────────────────────────────────────
+  const DURATION    = 10;   // seconds
+  const SCAN_EVERY  = 2500; // ms between frames
+
+  // ── API Key ───────────────────────────────────────────
   window.addEventListener('load', () => {
     const saved = localStorage.getItem('anthropic_api_key');
-    if (saved) {
-      document.getElementById('api-key-input').value = saved;
-      updateKeyStatus(true);
-    }
+    if (saved) { document.getElementById('api-key-input').value = saved; updateKeyStatus(true); }
   });
 
   function saveApiKey() {
     const key = document.getElementById('api-key-input').value.trim();
-    if (!key.startsWith('sk-ant-')) {
-      updateKeyStatus(false, '有効なAPIキーを入力してください（sk-ant- で始まる）');
-      return;
-    }
+    if (!key.startsWith('sk-ant-')) { updateKeyStatus(false, '有効なAPIキーを入力してください'); return; }
     localStorage.setItem('anthropic_api_key', key);
     updateKeyStatus(true);
   }
 
   function updateKeyStatus(ok, msg) {
     const el = document.getElementById('key-status');
-    if (ok) { el.textContent = '✓ APIキーが設定されています'; el.className = 'key-status ok'; }
-    else { el.textContent = msg || 'APIキーを入力してください'; el.className = 'key-status'; }
+    el.textContent = ok ? '✓ APIキーが設定されています' : (msg || 'APIキーを入力してください');
+    el.className = 'key-status' + (ok ? ' ok' : '');
   }
 
   function getApiKey() {
@@ -308,135 +368,144 @@
            document.getElementById('api-key-input').value.trim();
   }
 
-  // ── Mode Switch ───────────────────────────────────────
+  // ── Mode ─────────────────────────────────────────────
   function switchMode(mode) {
-    currentMode = mode;
     document.getElementById('btn-mode-video').classList.toggle('active', mode === 'video');
     document.getElementById('btn-mode-photo').classList.toggle('active', mode === 'photo');
     document.getElementById('video-mode').style.display = mode === 'video' ? 'block' : 'none';
     document.getElementById('photo-mode').style.display  = mode === 'photo' ? 'block' : 'none';
-    hideResult(); hideError();
+    hideError();
+    if (mode === 'photo' && isRecording) stopRecording();
     if (mode === 'photo' && videoStream) stopCamera();
   }
 
-  // ── Camera / Video ────────────────────────────────────
+  // ── Camera ────────────────────────────────────────────
   async function startCamera() {
     try {
       videoStream = await navigator.mediaDevices.getUserMedia({
         video: { facingMode: 'environment', width: { ideal: 1280 }, height: { ideal: 960 } }
       });
-      const video = document.getElementById('camera-video');
-      video.srcObject = videoStream;
+      const v = document.getElementById('camera-video');
+      v.srcObject = videoStream;
       document.getElementById('video-placeholder').style.display = 'none';
     } catch (e) {
-      showError('カメラの起動に失敗しました: ' + e.message);
+      showError('カメラ起動失敗: ' + e.message);
+      throw e;
     }
   }
 
   function stopCamera() {
     if (videoStream) { videoStream.getTracks().forEach(t => t.stop()); videoStream = null; }
-    const video = document.getElementById('camera-video');
-    video.srcObject = null;
+    document.getElementById('camera-video').srcObject = null;
     document.getElementById('video-placeholder').style.display = 'flex';
   }
 
-  function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
-
-  async function flashEffect() {
-    const flash = document.getElementById('frame-flash');
-    flash.style.opacity = '0.8';
-    await sleep(80);
-    flash.style.opacity = '0';
+  // ── Recording ─────────────────────────────────────────
+  async function toggleRecording() {
+    if (isRecording) { stopRecording(); return; }
+    if (!getApiKey()) { showError('APIキーを入力して「保存」を押してください。'); return; }
+    hideError();
+    hideSummary();
+    if (!videoStream) { await startCamera(); await sleep(800); }
+    startRecording();
   }
 
-  async function captureFramesFromVideo(count = 3, intervalMs = 600) {
+  function startRecording() {
+    isRecording  = true;
+    secondsLeft  = DURATION;
+    detections   = [];
+    pendingCall  = false;
+
+    // UI
+    const btn = document.getElementById('btn-rec');
+    btn.className = 'btn-rec stop';
+    btn.innerHTML = '<div class="rec-dot"></div> 録画中... 停止';
+    document.getElementById('rec-hint').textContent = '魚をカメラに向けてください';
+    document.getElementById('video-wrapper').classList.add('scanning');
+    document.getElementById('live-list').innerHTML = '';
+
+    showOverlay('スキャン中...', '');
+    startCountdown();
+
+    // Periodic frame capture
+    recInterval = setInterval(() => {
+      if (!pendingCall) sendFrame();
+    }, SCAN_EVERY);
+
+    // Send first frame immediately
+    sendFrame();
+  }
+
+  function stopRecording() {
+    isRecording = false;
+    clearInterval(recInterval);
+    clearInterval(countdownTimer);
+
+    document.getElementById('btn-rec').className = 'btn-rec start';
+    document.getElementById('btn-rec').innerHTML = '● 録画開始（10秒）';
+    document.getElementById('rec-hint').textContent = '撮影しながら魚名をリアルタイム表示 → 終了後に一覧表示';
+    document.getElementById('video-wrapper').classList.remove('scanning');
+    document.getElementById('countdown-ring').style.display = 'none';
+    document.getElementById('fish-overlay').style.display = 'none';
+
+    showSummary();
+  }
+
+  // ── Countdown ─────────────────────────────────────────
+  function startCountdown() {
+    const ring = document.getElementById('countdown-ring');
+    const text = document.getElementById('countdown-text');
+    const progress = document.getElementById('ring-progress');
+    const circumference = 2 * Math.PI * 21; // ≈132
+
+    ring.style.display = 'block';
+    text.textContent = secondsLeft;
+    progress.style.strokeDashoffset = 0;
+
+    countdownTimer = setInterval(() => {
+      secondsLeft--;
+      text.textContent = secondsLeft;
+      const offset = circumference * (1 - secondsLeft / DURATION);
+      progress.style.strokeDashoffset = offset;
+
+      if (secondsLeft <= 0) {
+        clearInterval(countdownTimer);
+        stopRecording();
+      }
+    }, 1000);
+  }
+
+  // ── Frame capture & API ───────────────────────────────
+  function captureFrame() {
     const video = document.getElementById('camera-video');
     const canvas = document.createElement('canvas');
-    canvas.width = video.videoWidth || 640;
+    canvas.width  = video.videoWidth  || 640;
     canvas.height = video.videoHeight || 480;
-    const ctx = canvas.getContext('2d');
-    const counter = document.getElementById('frame-counter');
-    const frames = [];
-
-    counter.style.display = 'block';
-    for (let i = 0; i < count; i++) {
-      counter.textContent = `撮影中 ${i + 1}/${count}`;
-      ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-      const dataUrl = canvas.toDataURL('image/jpeg', 0.85);
-      frames.push(dataUrl);
-      flashEffect();
-      // Show thumbnail
-      document.getElementById('thumb' + i).src = dataUrl;
-      if (i < count - 1) await sleep(intervalMs);
-    }
-    counter.style.display = 'none';
-    return frames;
+    canvas.getContext('2d').drawImage(video, 0, 0);
+    return canvas.toDataURL('image/jpeg', 0.8).split(',')[1];
   }
 
-  async function startVideoCapture() {
-    if (!getApiKey()) { showError('APIキーを入力して「保存」を押してください。'); return; }
-
-    // Start camera if not running
-    if (!videoStream) {
-      await startCamera();
-      await sleep(1000); // let camera warm up
-    }
-
-    const btn = document.getElementById('btn-capture');
-    const btnText = document.getElementById('capture-btn-text');
-    const spinner = document.getElementById('capture-spinner');
-    btn.disabled = true;
-    spinner.style.display = 'block';
-    btnText.textContent = '撮影・解析中...';
-
-    hideResult(); hideError();
-    document.getElementById('frames-strip').classList.remove('visible');
+  async function sendFrame() {
+    if (!isRecording || pendingCall) return;
+    pendingCall = true;
+    const b64 = captureFrame();
 
     try {
-      const dataUrls = await captureFramesFromVideo(3, 600);
-      capturedFrames = dataUrls.map(d => d.split(',')[1]);
-      document.getElementById('frames-strip').classList.add('visible');
-      await identifyFromFrames(capturedFrames);
+      const name = await askFishName(b64);
+      if (name) {
+        updateOverlay(name);
+        addDetection(name);
+      }
     } catch (e) {
-      showError('エラー: ' + e.message);
+      // silent: keep recording even on API error
     } finally {
-      btn.disabled = false;
-      spinner.style.display = 'none';
-      btnText.textContent = '📹 もう一度撮影して識別';
+      pendingCall = false;
     }
   }
 
-  async function identifyFromFrames(frames) {
+  async function askFishName(b64) {
     const apiKey = getApiKey();
-    const prompt = `複数フレームの動画から魚を識別してください。
-各フレームを総合的に判断して最も正確な識別結果を出してください。
-
-以下の形式で答えてください：
-
-【魚の名前】
-（和名・学名）
-
-【確信度】
-（高/中/低）と理由
-
-【特徴】
-（外見的な特徴、色、形など）
-
-【生息地・分布】
-（どこに生息しているか）
-
-【豆知識】
-（興味深い情報）
-
-画像に魚が映っていない場合はその旨を教えてください。`;
-
-    const content = [];
-    frames.forEach((b64, i) => {
-      content.push({ type: 'image', source: { type: 'base64', media_type: 'image/jpeg', data: b64 } });
-    });
-    content.push({ type: 'text', text: prompt });
-
-    const response = await fetch('https://api.anthropic.com/v1/messages', {
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -446,36 +515,105 @@
       },
       body: JSON.stringify({
         model: 'claude-opus-4-6',
-        max_tokens: 1024,
-        messages: [{ role: 'user', content }]
+        max_tokens: 30,
+        messages: [{
+          role: 'user',
+          content: [
+            { type: 'image', source: { type: 'base64', media_type: 'image/jpeg', data: b64 } },
+            { type: 'text',  text: '画像の魚の和名だけを答えてください。魚が映っていなければ「なし」とだけ答えてください。説明不要。' }
+          ]
+        }]
       })
     });
 
-    if (!response.ok) {
-      const err = await response.json().catch(() => ({}));
-      throw new Error(err?.error?.message || `HTTPエラー: ${response.status}`);
-    }
+    if (!res.ok) throw new Error('API error ' + res.status);
+    const data = await res.json();
+    const raw = (data.content?.[0]?.text || '').trim();
+    return raw === 'なし' || raw === '' ? null : raw;
+  }
 
-    const data = await response.json();
-    const text = data.content?.[0]?.text || '結果を取得できませんでした。';
-    document.getElementById('result-frames-count').textContent = `📹 ${frames.length}フレームを総合解析`;
-    showResult(text);
+  // ── Overlay ───────────────────────────────────────────
+  function showOverlay(name, sub) {
+    const overlay = document.getElementById('fish-overlay');
+    overlay.style.display = 'block';
+    document.getElementById('overlay-name').textContent = name;
+    document.getElementById('overlay-sub').textContent  = sub || '';
+  }
+
+  function updateOverlay(name) {
+    const nameEl = document.getElementById('overlay-name');
+    nameEl.style.opacity = '0';
+    setTimeout(() => {
+      nameEl.textContent = name;
+      nameEl.style.opacity = '1';
+    }, 150);
+    document.getElementById('overlay-sub').textContent = '識別済み';
+    document.getElementById('fish-overlay').style.display = 'block';
+  }
+
+  // ── Detection list ────────────────────────────────────
+  function addDetection(name) {
+    const existing = detections.find(d => d.name === name);
+    if (existing) { existing.count++; return; }
+    detections.push({ name, count: 1 });
+
+    // Live tag in top-right
+    const list = document.getElementById('live-list');
+    const tag = document.createElement('div');
+    tag.className = 'live-tag';
+    tag.textContent = name;
+    list.appendChild(tag);
+    // Keep max 4 tags visible
+    while (list.children.length > 4) list.removeChild(list.firstChild);
+  }
+
+  // ── Summary ───────────────────────────────────────────
+  function showSummary() {
+    const summary = document.getElementById('summary');
+    const list    = document.getElementById('fish-list');
+    const count   = document.getElementById('summary-count');
+
+    list.innerHTML = '';
+
+    // Sort by count desc
+    const sorted = [...detections].sort((a, b) => b.count - a.count);
+    const unique = sorted.filter((d, i, arr) => arr.findIndex(x => x.name === d.name) === i);
+
+    if (unique.length === 0) {
+      list.innerHTML = '<li class="no-fish">魚は検出されませんでした</li>';
+      count.textContent = '（0種）';
+    } else {
+      count.textContent = `（${unique.length}種）`;
+      unique.forEach((d, i) => {
+        const li = document.createElement('li');
+        li.innerHTML = `
+          <span class="num">${i + 1}</span>
+          <span class="name">🐟 ${d.name}</span>
+          <span class="count">${d.count}回検出</span>`;
+        list.appendChild(li);
+      });
+    }
+    summary.classList.add('visible');
+  }
+
+  function hideSummary() {
+    document.getElementById('summary').classList.remove('visible');
+    document.getElementById('live-list').innerHTML = '';
   }
 
   // ── Photo Mode ────────────────────────────────────────
+  let photoBase64 = null;
+
   function handleFile(event) {
     const file = event.target.files[0];
     if (!file) return;
-    photoMediaType = file.type || 'image/jpeg';
     const reader = new FileReader();
     reader.onload = (e) => {
-      const dataUrl = e.target.result;
-      photoBase64 = dataUrl.split(',')[1];
-      document.getElementById('preview-img').src = dataUrl;
+      photoBase64 = e.target.result.split(',')[1];
+      document.getElementById('preview-img').src = e.target.result;
       document.getElementById('photo-preview-container').style.display = 'block';
-      document.getElementById('capture-area').style.display = 'none';
       document.getElementById('btn-identify').classList.add('visible');
-      hideResult(); hideError();
+      document.getElementById('photo-result').classList.remove('visible');
     };
     reader.readAsDataURL(file);
   }
@@ -484,41 +622,54 @@
     photoBase64 = null;
     document.getElementById('file-input').value = '';
     document.getElementById('photo-preview-container').style.display = 'none';
-    document.getElementById('capture-area').style.display = 'block';
     document.getElementById('btn-identify').classList.remove('visible');
-    hideResult(); hideError();
+    document.getElementById('photo-result').classList.remove('visible');
   }
 
-  async function identifyFromPhoto() {
-    if (!getApiKey()) { showError('APIキーを入力して「保存」を押してください。'); return; }
+  async function identifyPhoto() {
+    if (!getApiKey()) { showError('APIキーを入力してください。'); return; }
     if (!photoBase64) { showError('写真を選択してください。'); return; }
 
     const btn = document.getElementById('btn-identify');
-    const btnText = document.getElementById('btn-text');
-    const spinner = document.getElementById('photo-spinner');
-    btn.disabled = true; spinner.style.display = 'block';
-    btnText.textContent = '解析中...';
-    hideResult(); hideError();
+    const txt = document.getElementById('btn-text');
+    const sp  = document.getElementById('photo-spinner');
+    btn.disabled = true; sp.style.display = 'block'; txt.textContent = '解析中...';
+    hideError();
 
     try {
-      await identifyFromFrames([photoBase64]);
-      document.getElementById('result-frames-count').textContent = '📷 写真1枚で解析';
+      const res = await fetch('https://api.anthropic.com/v1/messages', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'x-api-key': getApiKey(),
+          'anthropic-version': '2023-06-01',
+          'anthropic-dangerous-direct-browser-access': 'true'
+        },
+        body: JSON.stringify({
+          model: 'claude-opus-4-6',
+          max_tokens: 800,
+          messages: [{
+            role: 'user',
+            content: [
+              { type: 'image', source: { type: 'base64', media_type: 'image/jpeg', data: photoBase64 } },
+              { type: 'text',  text: 'この画像の魚を識別してください。\n\n【魚の名前】\n【特徴】\n【生息地】\n【豆知識】\n\nの順で答えてください。魚がいなければその旨を。' }
+            ]
+          }]
+        })
+      });
+      if (!res.ok) { const e = await res.json().catch(()=>({})); throw new Error(e?.error?.message || res.status); }
+      const data = await res.json();
+      document.getElementById('photo-result-body').textContent = data.content?.[0]?.text || '';
+      document.getElementById('photo-result').classList.add('visible');
     } catch (e) {
-      showError('エラーが発生しました: ' + e.message);
+      showError('エラー: ' + e.message);
     } finally {
-      btn.disabled = false; spinner.style.display = 'none';
-      btnText.textContent = '🔍 この魚を調べる';
+      btn.disabled = false; sp.style.display = 'none'; txt.textContent = '🔍 この魚を調べる';
     }
   }
 
-  // ── UI helpers ────────────────────────────────────────
-  function showResult(text) {
-    document.getElementById('result-body').textContent = text;
-    document.getElementById('result').classList.add('visible');
-    document.getElementById('result').scrollIntoView({ behavior: 'smooth', block: 'start' });
-  }
-
-  function hideResult() { document.getElementById('result').classList.remove('visible'); }
+  // ── Helpers ───────────────────────────────────────────
+  function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
 
   function showError(msg) {
     const el = document.getElementById('error-box');
@@ -527,6 +678,5 @@
 
   function hideError() { document.getElementById('error-box').classList.remove('visible'); }
 </script>
-
 </body>
 </html>
